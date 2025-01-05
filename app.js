@@ -1,4 +1,5 @@
-let x = 0, y = 0, k = 0, p = 0, rd = 1, pc = ["blue", "red", "green", "yellow"];
+let cnt=0,go = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
+//g0:no of players to the final, rl:roll dice flag, pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57), mp:piece flag 
 const turn = document.getElementById("turn");
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
@@ -6,7 +7,6 @@ let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
 prnt.data = 0;
 chld.c = -1;
-let rn = 6;
 dice.addEventListener('click', () => {
     if (rd === 1) {
         rd = 0;
@@ -16,6 +16,15 @@ dice.addEventListener('click', () => {
             dice.style.animation = "";
         }, { once: true });
     }
+    if (ec === 1) {
+        if (chld) {  // Check if chld is not null or undefined
+            //console.log(chld);
+            chld.click();
+        } else {
+            //console.log("chld is null or undefined");
+        }
+    }
+
 });
 function changep() {
     p++;
@@ -23,7 +32,11 @@ function changep() {
         p = 0;
     }
     turn.innerText = `${pc[p]}'s turn`;
+    //console.log(turn.innerText);
     turn.style.color = pc[p];
+    let c = pc[p][0];
+    chld = document.querySelector(`.${c}p1`);
+    rd = 1;
 }
 function findcord() {//for blue
     if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
@@ -140,8 +153,7 @@ function findcord() {//for blue
                 y = 1;
             }
         }
-        //console.log("mp:", chld.c, "k:", k, "x:", x, "y:", y);
-        setTimeout(movep, 100);
+        setTimeout(movep, 10);
     }
 }
 function movep() {
@@ -152,19 +164,37 @@ function movep() {
     chld.style.transform = `translate(${chld.x}px, ${chld.y}px)`;
     k++;
     if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
-        setTimeout(findcord, 100);
+        setTimeout(findcord, 10);
     } else {
-        chld.c += rn;
-        //console.log(chld.c);
-        if (!(rn === 4 || rn === 6)) {
-            changep();
+        if (chld) {  // Add this check if chld is being used here
+            chld.c += rn;
+            if(chld.c===56){
+                cnt++;
+                console.log(`${cnt}.${chld.style.backgroundColor}`);
+                if(cnt===3){
+                    console.log('game over');
+                    go=1;
+                }
+            }
+            // console.log(chld.c);
+            if (rn !== 6) {
+                changep(); // check after
+            } else {
+                md = 1;
+            }
+        } else {
+            //console.log("chld is null or undefined");
         }
+        rn = 0;
         rd = 1;
+        dice.click();
     }
+
     //console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
 }
 function createp() {
-    //console.log(pc[p][0]);
+    mp = 0;
+    rd = 1;
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
     prnt.data = [0, 0, 0, 0];
@@ -180,60 +210,87 @@ function createp() {
             chld.y = 0;
             chld.addEventListener('click', () => {
                 chld = document.querySelector(`.${c}p${i}`);
-                if (chld.className[0] === pc[p][0]) {
-                    // console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
-                    k = 0;
-                    if (chld.c > -1) {
-                        k = chld.c + 1;
-                    }
-                    setTimeout(findcord, 400);
+                // if (chld.className[0] === pc[p][0] && mp === 1 && rn !== 0) {
+                // console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
+                k = 0;
+                if (chld.c > -1) {
+                    k = chld.c + 1;
                 }
+                setTimeout(findcord, 400);
+                // } else {
+                //     console.log("Invlaid");
+                // }
             });
             prnt.appendChild(chld);
+            ec = 1;
             break;
         } else if (i === 4) {
             //console.log("all out");
         }
     }
+    dice.click();
 }
 function changef() {
-    let c = pc[p][0];
-    prnt = document.querySelector(`.${c}s`);
-    rn = Math.floor(Math.random() * 6) + 1;
-    if (rn === 4 || rn === 6) {
-        if (prnt.childElementCount === 0) {
-            createp();
+    if (go === 0) {
+        let c = pc[p][0];
+        prnt = document.querySelector(`.${c}s`);
+        rn = Math.floor(Math.random() * 6) + 1;
+        if (chld) {
+            // console.log(chld.c);
+            if (chld.c === 56) {
+                if (wc.includes(chld.style.backgroundColor)) {
+                    wc = wc.filter(value => value !== chld.style.backgroundColor);
+                    // console.log(wc); // Output: [1, 2, 4, 5]
+                    if (wc.length === 1) {
+                        go = 1;
+                    }
+                }
+            }
+            if ((chld.c + rn) > 56 || chld.c === 56) {
+                changep();
+                dice.click();
+            }
         }
-    } else {
-        if (prnt.childElementCount === 0) {
-            changep();
-            rd=1;
-        }
-    }
-    for (let i = 0; i < rn; i++) {
-        document.getElementById(`b${i + 1}`).style.display = "block";
-    } for (let i = rn; i < 6; i++) {
-        document.getElementById(`b${i + 1}`).style.display = "none";
-    }
-    if (rn !== 4) {
-        dice.style.rowGap = "0px";
-    }
-    if (rn === 5) {
-        dice.style.padding = "8px";
-        b3.style.marginLeft = "12px";
-        b3.style.marginRight = "12px";
-    } else {
-        b3.style.marginLeft = "0px";
-        b3.style.marginRight = "0px";
-        if (rn === 1) {
-            dice.style.padding = "20px";
-        } else if (rn === 2) {
-            dice.style.padding = "11px";
-        } else if (rn === 4) {
-            dice.style.padding = "11px";
-            dice.style.rowGap = "6px";
+        // console.log("dice:", rn);
+        if (rn === 6) {
+            if (prnt.childElementCount === 0) {
+                createp();
+            } else if (prnt.childElementCount > 0) {
+                mp = 1;
+            }
         } else {
-            dice.style.padding = "7px";
+            mp = 1;
+            if (prnt.childElementCount === 0) {
+                changep();
+                rd = 1;
+                dice.click();
+            }
+        }
+        for (let i = 0; i < rn; i++) {
+            document.getElementById(`b${i + 1}`).style.display = "block";
+        } for (let i = rn; i < 6; i++) {
+            document.getElementById(`b${i + 1}`).style.display = "none";
+        }
+        if (rn !== 4) {
+            dice.style.rowGap = "0px";
+        }
+        if (rn === 5) {
+            dice.style.padding = "8px";
+            b3.style.marginLeft = "12px";
+            b3.style.marginRight = "12px";
+        } else {
+            b3.style.marginLeft = "0px";
+            b3.style.marginRight = "0px";
+            if (rn === 1) {
+                dice.style.padding = "20px";
+            } else if (rn === 2) {
+                dice.style.padding = "11px";
+            } else if (rn === 4) {
+                dice.style.padding = "11px";
+                dice.style.rowGap = "6px";
+            } else {
+                dice.style.padding = "7px";
+            }
         }
     }
 }
