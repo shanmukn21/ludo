@@ -1,4 +1,4 @@
-let x = 0, y = 0, k = 0, p = 0, pc = ["blue", "red", "green", "yellow"];
+let x = 0, y = 0, k = 0, p = 0, rd = 1, pc = ["blue", "red", "green", "yellow"];
 const turn = document.getElementById("turn");
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
@@ -8,11 +8,14 @@ prnt.data = 0;
 chld.c = -1;
 let rn = 6;
 dice.addEventListener('click', () => {
-    dice.style.animation = "dice-rotate 0.4s ease-in-out";
-    setTimeout(changef, 200);
-    dice.addEventListener('animationend', () => {
-        dice.style.animation = "";
-    }, { once: true });
+    if (rd === 1) {
+        rd = 0;
+        dice.style.animation = "dice-rotate 0.4s ease-in-out";
+        setTimeout(changef, 200);
+        dice.addEventListener('animationend', () => {
+            dice.style.animation = "";
+        }, { once: true });
+    }
 });
 function changep() {
     p++;
@@ -78,7 +81,7 @@ function findcord() {//for blue
                 y = 0;
             } else if (p === 3) {
                 x = 0;
-                y = 1;
+                y = -1;
             }
         } else if (k === 18) {//up right
             if (p === 0) {
@@ -134,7 +137,7 @@ function findcord() {//for blue
                 y = -1;
             } else if (p === 3) {
                 x = 1;
-                y = -1;
+                y = 1;
             }
         }
         //console.log("mp:", chld.c, "k:", k, "x:", x, "y:", y);
@@ -152,15 +155,13 @@ function movep() {
         setTimeout(findcord, 100);
     } else {
         chld.c += rn;
-        console.log(chld.c);
-        if (57 > (chld.c + rn)) {
-            // dice.click();
-        }
+        //console.log(chld.c);
         if (!(rn === 4 || rn === 6)) {
             changep();
         }
+        rd = 1;
     }
-    console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
+    //console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
 }
 function createp() {
     //console.log(pc[p][0]);
@@ -172,24 +173,26 @@ function createp() {
             prnt.data[i] = 1;
             chld = document.createElement('div');
             chld.className = `${c}` + 'p' + `${i}`;
-            console.log(`${c}p${i} out`);
+            //console.log(`${c}p${i} out`);
             chld.style.backgroundColor = `${pc[p]}`;
             chld.c = 0;
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
                 chld = document.querySelector(`.${c}p${i}`);
-                console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
-                k = 0;
-                if (chld.c > -1) {
-                    k = chld.c + 1;
+                if (chld.className[0] === pc[p][0]) {
+                    // console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
+                    k = 0;
+                    if (chld.c > -1) {
+                        k = chld.c + 1;
+                    }
+                    setTimeout(findcord, 400);
                 }
-                setTimeout(findcord, 400);
             });
             prnt.appendChild(chld);
             break;
         } else if (i === 4) {
-            console.log("all out");
+            //console.log("all out");
         }
     }
 }
@@ -198,14 +201,13 @@ function changef() {
     prnt = document.querySelector(`.${c}s`);
     rn = Math.floor(Math.random() * 6) + 1;
     if (rn === 4 || rn === 6) {
-        //console.log("out");
         if (prnt.childElementCount === 0) {
             createp();
         }
-        // dice.click();
     } else {
         if (prnt.childElementCount === 0) {
             changep();
+            rd=1;
         }
     }
     for (let i = 0; i < rn; i++) {
