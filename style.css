@@ -1,0 +1,327 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 33vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    zoom: 3;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#theme {
+    min-width: 150px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#turn {
+    text-transform: capitalize;
+    color: blue;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+@media (max-width:1250px) {
+    body {
+        height: 40vh;
+        zoom: 2.5;
+    }
+}
+
+@media (max-width:1040px) {
+    body {
+        height: 44vh;
+        zoom: 2.25;
+    }
+}
+
+@media (max-width:950px)and (min-height:800px) {
+    body {
+        flex-direction: column;
+        height: 32vh;
+        zoom: 3;
+    }
+    #theme {
+        min-height: 100px;
+    }
+}
+
+@media (max-width:862px)and (max-height:800px) {
+    body {
+        flex-direction: column;
+        height: 50vh;
+        zoom: 2;
+    }
+
+    #theme {
+        min-height: 100px;
+    }
+}
+
+@media (max-width:490px) {
+    body {
+        zoom: 1.8;
+    }
+}
+
+@media (max-width:425px) {
+    body {
+        zoom: 1.60;
+    }
+}
+
+@media (max-width:375px) {
+    body {
+        zoom: 1.40;
+    }
+}
+
+@media (max-width:320px) {
+    body {
+        zoom: 1.25;
+    }
+}
+
+@media (max-width:290px) {
+    body {
+        zoom: 1.15;
+    }
+}
+
+@media (max-width:260px) {
+    body {
+        zoom: 1;
+    }
+}
+
+@media (max-width:225px) {
+    body {
+        zoom: 0.85;
+    }
+}
+
+@media (max-width:200px) {
+    body {
+        zoom: 0.75;
+    }
+}
+
+@media (max-width:170px) {
+    body {
+        zoom: 0.65;
+    }
+}
+
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0px;
+    row-gap: 0px;
+    min-width: 225px;
+    min-height: 225px;
+    max-width: 225px;
+    max-height: 225px;
+    z-index: 1;
+}
+
+#greenmid,
+#bluemid {
+    min-width: 45px;
+    max-width: 45px;
+    min-height: 90px;
+    max-height: 90px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#redmid,
+#yellowmid {
+    min-width: 90px;
+    max-width: 90px;
+    min-height: 45px;
+    max-height: 45px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#greenmid div,
+#bluemid div,
+#redmid div,
+#yellowmid div {
+    border: 1px solid rgb(0, 0, 0, 0.35);
+    padding: 1.5px;
+    min-width: 15px;
+    min-height: 15px;
+    max-width: 15px;
+    max-height: 15px;
+}
+
+#greenmid div div,
+#bluemid div div,
+#redmid div div,
+#yellowmid div div {
+    border: 1px solid black;
+    padding: 0px;
+    min-width: 10px;
+    min-height: 10px;
+    max-width: 10px;
+    max-height: 10px;
+}
+
+#center {
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+    position: relative;
+}
+
+#rotated {
+    rotate: -45deg;
+    display: flex;
+    flex-wrap: wrap;
+    zoom: 1.41;
+    position: absolute;
+    top: -9px;
+    right: -12px;
+    left: -7.5px;
+}
+
+#rotated div {
+    width: 22.5px;
+    height: 22.5px;
+}
+
+#red,
+#green,
+#yellow,
+#blue {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 15px;
+    row-gap: 15px;
+    padding: 7.5px;
+    min-width: 60px;
+    min-height: 60px;
+    max-width: 90px;
+    max-height: 90px;
+    background-color: white;
+}
+
+#red div,
+#green div,
+#yellow div,
+#blue div {
+    padding: 0px;
+    min-width: 15px;
+    min-height: 15px;
+    max-width: 15px;
+    max-height: 15px;
+    border-radius: 50%;
+}
+
+#red {
+    border: 15px solid red;
+}
+
+#green {
+    border: 15px solid green;
+}
+
+#blue {
+    border: 15px solid blue;
+}
+
+#yellow {
+    border: 15px solid yellow;
+}
+
+#red div,
+#rb,
+#rt {
+    background-color: red;
+}
+
+#green div,
+#gb,
+#gt {
+    background-color: green;
+}
+
+#blue div,
+#bb,
+#bt {
+    background-color: blue;
+}
+
+#yellow div,
+#yb,
+#yt {
+    background-color: yellow;
+}
+
+#middle div {
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+    border: 1px solid black;
+}
+
+#dice {
+    width: 50px;
+    height: 50px;
+    min-width: 36px;
+    min-height: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 7px;
+    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgb(0, 0, 0, 0.05);
+    box-shadow: 1.5px 1.5px 2px 2px rgb(0, 0, 0, 0.35);
+}
+
+#dice div {
+    background-color: black;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+@keyframes dice-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(2880deg);
+    }
+}
+
+#dice {
+    transition: transform 0.4s ease-in-out;
+    transform-style: preserve-3d;
+}
+
+.rs div,.gs div,.bs div,.ys div{
+    border-radius: 50%;
+    position: absolute;
+}
+
+.bp4 {
+    background-color: blue;
+    border-radius: 50%;
+}
