@@ -1,45 +1,57 @@
-let cnt=0,go = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
+console.log(`Blue's turn`);
+let cc = 0, oor = 0, cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
 //g0:no of players to the final, rl:roll dice flag, pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57), mp:piece flag 
 const turn = document.getElementById("turn");
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
+
 let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
-prnt.data = 0;
 chld.c = -1;
+let debug = true;
+for (let i = 0; i < 4; i++) {
+    let c = pc[i][0];
+    prnt = document.querySelector(`.${c}s`);
+    prnt.data = new Array(0, 0, 0, 0);
+    document.getElementById(`${pc[i]}`).addEventListener('click', () => {
+        createp();
+    });
+}
 dice.addEventListener('click', () => {
-    if (rd === 1) {
-        rd = 0;
-        dice.style.animation = "dice-rotate 0.4s ease-in-out";
-        setTimeout(changef, 200);
-        dice.addEventListener('animationend', () => {
-            dice.style.animation = "";
-        }, { once: true });
-    }
+    // if (rd === 1) {
+    //     rd = 0;
+    dice.style.animation = "dice-rotate 0.1s ease-in-out";
+    setTimeout(changef, 100);
     if (ec === 1) {
-        if (chld) {  // Check if chld is not null or undefined
-            //console.log(chld);
-            chld.click();
-        } else {
-            //console.log("chld is null or undefined");
+        if (chld) {
+            // console.log(chld.className); // Check if chld is not null or undefined
+            // chld.click();
         }
     }
-
+    dice.addEventListener('animationend', () => {
+        dice.style.animation = "";
+    }, { once: true });
+    // }
 });
-function changep() {
+function changep() {//change player
     p++;
     if (p === 4) {
         p = 0;
     }
     turn.innerText = `${pc[p]}'s turn`;
-    //console.log(turn.innerText);
+    if (oor === 1) {
+        console.log(`changed from ${chld.style.backgroundColor} to ${pc[p]}`);
+    }
+    console.log(turn.innerText);
     turn.style.color = pc[p];
     let c = pc[p][0];
-    chld = document.querySelector(`.${c}p1`);
-    rd = 1;
+    // rd = 1;
+    // console.log("changep()");
+    if (debug) { dice.click(); }
+    oor = 0;
 }
-function findcord() {//for blue
-    if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
+function findcord() {//finds coordinates of piece
+    if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {//default cmnts for blue
         if ([1, 2, 3, 4, 11, 12, 19, 20, 21, 22, 23, 51, 52, 53, 54, 55, 56].includes(k)) {//move up
             if (p === 0) {
                 x = 0;
@@ -153,144 +165,141 @@ function findcord() {//for blue
                 y = 1;
             }
         }
-        setTimeout(movep, 10);
+        setTimeout(movep, 50);
     }
 }
-function movep() {
+function movep() {//moves piece
+    let dch = 0;
     let xp = x * 15;
     let yp = y * 15;
     chld.x += xp;
     chld.y += yp;
     chld.style.transform = `translate(${chld.x}px, ${chld.y}px)`;
     k++;
-    if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
-        setTimeout(findcord, 10);
+    if (chld.c >= 50) {
+        console.log(k);
+    }
+    if (k < 56 && k <= (chld.c + rn) && 56 > (chld.c + rn)) {
+        setTimeout(findcord, 50);
     } else {
         if (chld) {  // Add this check if chld is being used here
+            console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             chld.c += rn;
-            if(chld.c===56){
+            if (chld.c === 56) {
                 cnt++;
                 console.log(`${cnt}.${chld.style.backgroundColor}`);
-                if(cnt===3){
+                if (cnt === 3) {
                     console.log('game over');
-                    go=1;
+                    return;
                 }
             }
-            // console.log(chld.c);
             if (rn !== 6) {
                 changep(); // check after
-            } else {
-                md = 1;
+                dch = 1;
             }
-        } else {
-            //console.log("chld is null or undefined");
         }
-        rn = 0;
-        rd = 1;
-        dice.click();
+        // rn =0;
+        // rd = 1;
+        if (dch === 0) {
+            // console.log("movep()");
+            if (debug) { dice.click(); }
+        } //maybe check ln 85 multiple clicks
     }
-
-    //console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
 }
-function createp() {
-    mp = 0;
-    rd = 1;
+function createp() {//creates piece or brings out piece
+    // mp = 0;
+    // rd = 1;
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
-    prnt.data = [0, 0, 0, 0];
     for (let i = 1; i <= 4; i++) {
-        if (prnt.data[i] === 0) {
-            prnt.data[i] = 1;
+        if (prnt.data[i - 1] === 0) {
+            prnt.data[i - 1] = 1;
             chld = document.createElement('div');
             chld.className = `${c}` + 'p' + `${i}`;
-            //console.log(`${c}p${i} out`);
             chld.style.backgroundColor = `${pc[p]}`;
+            console.log(`${chld.className} came out`);
             chld.c = 0;
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
-                chld = document.querySelector(`.${c}p${i}`);
-                // if (chld.className[0] === pc[p][0] && mp === 1 && rn !== 0) {
-                // console.log("c:", chld.c, "x:", chld.x, "y:", chld.y);
-                k = 0;
-                if (chld.c > -1) {
-                    k = chld.c + 1;
-                }
-                setTimeout(findcord, 400);
-                // } else {
-                //     console.log("Invlaid");
+                // if (turn.innerText[0].toLowerCase()===pc[p][0]) {
+                    console.log(`${chld.className} clicked`);
+                    chld = document.querySelector(`.${c}p${i}`);
+                    k = 0;
+                    if (chld.c > -1) {
+                        k = chld.c + 1;
+                    }
+                    setTimeout(findcord, 50);
                 // }
             });
             prnt.appendChild(chld);
-            ec = 1;
+            ec = 1;//element created or exists
             break;
         } else if (i === 4) {
             //console.log("all out");
         }
     }
-    dice.click();
+    // console.log("createp()");
+    if (debug) { dice.click(); }
 }
-function changef() {
-    if (go === 0) {
-        let c = pc[p][0];
-        prnt = document.querySelector(`.${c}s`);
-        rn = Math.floor(Math.random() * 6) + 1;
-        if (chld) {
-            // console.log(chld.c);
-            if (chld.c === 56) {
-                if (wc.includes(chld.style.backgroundColor)) {
-                    wc = wc.filter(value => value !== chld.style.backgroundColor);
-                    // console.log(wc); // Output: [1, 2, 4, 5]
-                    if (wc.length === 1) {
-                        go = 1;
-                    }
-                }
-            }
-            if ((chld.c + rn) > 56 || chld.c === 56) {
-                changep();
-                dice.click();
-            }
-        }
-        // console.log("dice:", rn);
-        if (rn === 6) {
-            if (prnt.childElementCount === 0) {
-                createp();
-            } else if (prnt.childElementCount > 0) {
-                mp = 1;
-            }
+function changef() {//change face of the dice or roll dice
+    rn = Math.floor(Math.random() * 6) + 1;
+    console.log('dice rolled:', rn);
+    for (let i = 0; i < rn; i++) {
+        document.getElementById(`b${i + 1}`).style.display = "block";
+    } for (let i = rn; i < 6; i++) {
+        document.getElementById(`b${i + 1}`).style.display = "none";
+    }
+    if (rn !== 4) {
+        dice.style.rowGap = "0px";
+    }
+    if (rn === 5) {
+        dice.style.padding = "8px";
+        b3.style.marginLeft = "12px";
+        b3.style.marginRight = "12px";
+    } else {
+        b3.style.marginLeft = "0px";
+        b3.style.marginRight = "0px";
+        if (rn === 1) {
+            dice.style.padding = "20px";
+        } else if (rn === 2) {
+            dice.style.padding = "11px";
+        } else if (rn === 4) {
+            dice.style.padding = "11px";
+            dice.style.rowGap = "6px";
         } else {
-            mp = 1;
-            if (prnt.childElementCount === 0) {
-                changep();
-                rd = 1;
-                dice.click();
-            }
+            dice.style.padding = "7px";
         }
-        for (let i = 0; i < rn; i++) {
-            document.getElementById(`b${i + 1}`).style.display = "block";
-        } for (let i = rn; i < 6; i++) {
-            document.getElementById(`b${i + 1}`).style.display = "none";
+    }
+    clmts();
+}
+
+function clmts() {
+    let c = pc[p][0];
+    prnt = document.querySelector(`.${c}s`);
+    if (chld) {
+        if ((chld.c + rn) > 56 || chld.c === 56) {
+            console.error("out of range");
+            oor = 1;
+            cc = 1;
         }
-        if (rn !== 4) {
-            dice.style.rowGap = "0px";
+    }
+    if (rn === 6) {
+        if (prnt.childElementCount === 0) {
+            createp();
+        } else if (prnt.childElementCount > 0) {
+            // mp = 1;
         }
-        if (rn === 5) {
-            dice.style.padding = "8px";
-            b3.style.marginLeft = "12px";
-            b3.style.marginRight = "12px";
-        } else {
-            b3.style.marginLeft = "0px";
-            b3.style.marginRight = "0px";
-            if (rn === 1) {
-                dice.style.padding = "20px";
-            } else if (rn === 2) {
-                dice.style.padding = "11px";
-            } else if (rn === 4) {
-                dice.style.padding = "11px";
-                dice.style.rowGap = "6px";
-            } else {
-                dice.style.padding = "7px";
-            }
+    } else {
+        // mp = 1;
+        if (prnt.childElementCount === 0) {
+            cc = 1;
+            // rd = 1;
+            // if(debug){dice.click();}
         }
+    }
+    if (cc === 1) {
+        cc = 0;
+        changep();
     }
 }
