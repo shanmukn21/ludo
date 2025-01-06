@@ -180,6 +180,7 @@ body {
 }
 
 #center {
+    z-index: 0;
     width: 45px;
     height: 45px;
     overflow: hidden;
@@ -319,6 +320,7 @@ body {
 .rs div,.gs div,.bs div,.ys div{
     border-radius: 50%;
     position: absolute;
+    z-index: 1;
 }
 
 .bp4 {
