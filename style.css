@@ -223,7 +223,7 @@ body {
 #green div,
 #yellow div,
 #blue div {
-    padding: 0px;
+    padding: 2.5px;
     min-width: 15px;
     min-height: 15px;
     max-width: 15px;
@@ -231,6 +231,18 @@ body {
     border-radius: 50%;
 }
 
+#red div div,
+#green div div,
+#yellow div div,
+#blue div div{
+    border: 1px solid black;
+    padding: 0px;
+    min-width: 10px;
+    min-height: 10px;
+    max-width: 10px;
+    max-height: 10px;
+    border-radius: 50%;
+}
 #red {
     border: 15px solid red;
 }
@@ -312,10 +324,10 @@ body {
     }
 }
 
-#dice {
+/* #dice {
     transition: transform 0.4s ease-in-out;
     transform-style: preserve-3d;
-}
+} */
 
 .rs div,.gs div,.bs div,.ys div{
     border-radius: 50%;
