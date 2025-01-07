@@ -12,7 +12,18 @@ let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
 
 chld.c = -1;
-let debug = true;
+let debug = false;
+
+document.getElementById("center").addEventListener('click', () => {
+    if (debug === false) {
+        debug = true;
+        dice.click();
+        dice.style.pointerEvents = 'none';
+    } else {
+        debug = false;
+        dice.style.pointerEvents = 'all';
+    }
+});
 
 let mat = {}; // Initialize the main matrix
 
@@ -29,13 +40,13 @@ for (let i = 0; i < 4; i++) {
     prnt = document.querySelector(`.${c}s`);
     prnt.data = new Array(0, 0, 0, 0);
     document.getElementById(`${pc[i]}`).addEventListener('click', () => {
-        pieceout();
+        if (rn === 6) {
+            pieceout();
+        }
     });
 }
 
 dice.addEventListener('click', () => {
-    // if (rd === 1) {
-    //     rd = 0;
     dice.style.animation = "dice-rotate 0.1s ease-in-out";
     setTimeout(gnrtnum, 100);
     if (ec === 1) {
@@ -47,32 +58,65 @@ dice.addEventListener('click', () => {
     dice.addEventListener('animationend', () => {
         dice.style.animation = "";
     }, { once: true });
-    // }
 });
+let flickTimeout; // Store the timeout ID for flickering
 
-function chngplayer() {//change player
+function chngplayer() { // Change player
     p = (p + 1) % 4;
-    turn.innerText = `${pc[p]}'s turn`;
+    turn.innerText = ``;
+    // turn.innerText = `${pc[p]}'s turn`;
     if (oor === 1) {
         console.log(`changed from ${chld.style.backgroundColor} to ${pc[p]}`);
     }
     console.log(turn.innerText);
     turn.style.color = pc[p];
-    let c = pc[p][0];
-    // rd = 1;
+    stopFlicker(); // Stop any ongoing flickering
+    flickw(); // Start new flickering cycle
     chngz();
     if (debug) { dice.click(); }
     oor = 0;
 }
 
+function flickw() {
+    for (let i = 0; i < 4; i++) {
+        if (p === i) {
+            document.querySelector(`#${pc[i]}`).style.borderColor = "white";
+        } else {
+            document.querySelector(`#${pc[i]}`).style.borderColor = `${pc[i]}`;
+        }
+    }
+    flickTimeout = setTimeout(flickb, 150); // Schedule flickb
+}
+
+function flickb() {
+    document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
+    flickTimeout = setTimeout(flickw, 300); // Schedule flickw
+}
+
+function stopFlicker() {
+    clearTimeout(flickTimeout); // Clear any ongoing flickering timeout
+}
+
 function chngz() {
     for (let i = 0; i < 4; i++) {
+        if (i === p) {
+            document.getElementById(`${pc[i]}`).style.pointerEvents = 'all';
+        } else {
+            document.getElementById(`${pc[i]}`).style.pointerEvents = 'none';
+        }
         for (let j = 0; j < 4; j++) {
-            if (i === p && (document.querySelector(`.${pc[p][0]}p${j}`))) {
-                chld=document.querySelector(`.${pc[p][0]}p${j}`);
-                chld.style.zIndex = '3';
-            } else if (document.querySelector(`.${pc[i][0]}p${j}`)) {
-                document.querySelector(`.${pc[i][0]}p${j}`).style.zIndex = '2';
+            let tchld = document.querySelector(`.${pc[i][0]}p${j}`);
+            if (tchld) {
+                if (i === p) {
+                    //console.log(`${pc[i][0]}p${j} on`);
+                    tchld.style.zIndex = '3';
+                    tchld.style.pointerEvents = 'all';
+                    chld = tchld;
+                } else {
+                    //console.log(`${pc[i][0]}p${j} off`);
+                    tchld.style.zIndex = '2';
+                    tchld.style.pointerEvents = 'none';
+                }
             }
         }
     }
@@ -210,7 +254,7 @@ function movep() {//moves piece
     if (k < 56 && k <= (chld.c + rn) && 56 > (chld.c + rn)) {
         setTimeout(findcord, 50);
     } else {
-        if (chld) {  // Add this check if chld is being used here
+        if (chld) {
             console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             mat[chld.c][chld.className] = 0;
             chld.c += rn;
@@ -234,10 +278,7 @@ function movep() {//moves piece
                 dch = 1;
             }
         }
-        // rn =0;
-        // rd = 1;
         if (dch === 0) {
-            // console.log("movep()");
             if (debug) { dice.click(); }
         } //maybe check ln 85 multiple clicks
     }
@@ -278,8 +319,6 @@ function take() {
 }
 
 function pieceout() {//creates piece or brings out piece
-    // mp = 0;
-    // rd = 1;
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
     for (let i = 1; i <= 4; i++) {
@@ -294,14 +333,14 @@ function pieceout() {//creates piece or brings out piece
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
-                if (turn.style.color===chld.style.backgroundColor) {
-                console.log(`${chld.className} clicked`);
-                chld = document.querySelector(`.${c}p${i}`);
-                k = 0;
-                if (chld.c > -1) {
-                    k = chld.c + 1;
-                }
-                setTimeout(findcord, 50);
+                if (turn.style.color === chld.style.backgroundColor) {
+                    console.log(`${chld.className} clicked`);
+                    chld = document.querySelector(`.${c}p${i}`);
+                    k = 0;
+                    if (chld.c > -1) {
+                        k = chld.c + 1;
+                    }
+                    setTimeout(findcord, 50);
                 }
             });
             prnt.appendChild(chld);
@@ -311,7 +350,6 @@ function pieceout() {//creates piece or brings out piece
             //console.log("all out");
         }
     }
-    // console.log("pieceout()");
     if (debug) { dice.click(); }
 }
 function gnrtnum() {//generates random num b/w 1 to 6
@@ -362,14 +400,11 @@ function checklmts() {
         if (prnt.childElementCount === 0) {
             pieceout();
         } else if (prnt.childElementCount > 0) {
-            // mp = 1;
+            console.log('yes');
         }
     } else {
-        // mp = 1;
         if (prnt.childElementCount === 0) {
             cc = 1;
-            // rd = 1;
-            // if(debug){dice.click();}
         }
     }
     if (cc === 1) {
