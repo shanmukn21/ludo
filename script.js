@@ -4,6 +4,10 @@ let cc = 0, oor = 0, cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0
 let pt = 0;
 //pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57)
 
+let chldc = 0;
+
+let chlda = [];
+
 const turn = document.getElementById("turn");
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
@@ -12,53 +16,153 @@ let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
 
 chld.c = -1;
-let debug = false;
+let debugdice = false;
+let debugplyr = false;
 
+//debug code start
 document.getElementById("center").addEventListener('click', () => {
-    if (debug === false) {
-        debug = true;
+    if (debugdice === false) {
+        debugdice = true;
         dice.click();
         dice.style.pointerEvents = 'none';
     } else {
-        debug = false;
+        debugdice = false;
         dice.style.pointerEvents = 'all';
     }
 });
+document.querySelector("header").addEventListener('click', () => {
+    if (debugplyr === false) {
+        debugplyr = true;
+        // document.querySelector("#board").style.pointerEvents = 'none';
+    } else {
+        debugplyr = false;
+        // document.querySelector("#board").style.pointerEvents = 'all';
+    }
+});
+//debug code end
 
 let mat = {}; // Initialize the main matrix
 
-for (let i = 0; i <= 56; i++) {
-    mat[i] = {}; // Initialize each index as an object
-    for (let j of ['b', 'r', 'g', 'y']) { // Use 'of' with array elements
-        for (let n = 1; n <= 4; n++) {
-            mat[i][`${j}p${n}`] = 0; // Set default value to 0
+function Initialize() {
+    for (let i = 0; i <= 56; i++) {
+        mat[i] = {}; // Initialize each index as an object
+        for (let j of ['b', 'r', 'g', 'y']) { // Use 'of' with array elements
+            for (let n = 1; n <= 4; n++) {
+                mat[i][`${j}p${n}`] = 0; // Set default value to 0
+            }
         }
     }
+    for (let i = 0; i < 4; i++) {
+        let c = pc[i][0];
+        prnt = document.querySelector(`.${c}s`);
+        prnt.data = new Array(0, 0, 0, 0);
+        document.getElementById(`${pc[i]}`).addEventListener('click', () => {
+            if (rn === 6 && prnt.childElementCount < 4) {
+                pieceout();
+            }
+        });
+    }
 }
-for (let i = 0; i < 4; i++) {
-    let c = pc[i][0];
-    prnt = document.querySelector(`.${c}s`);
-    prnt.data = new Array(0, 0, 0, 0);
-    document.getElementById(`${pc[i]}`).addEventListener('click', () => {
-        if (rn === 6) {
-            pieceout();
-        }
-    });
-}
+Initialize();
 
 dice.addEventListener('click', () => {
     dice.style.animation = "dice-rotate 0.1s ease-in-out";
-    setTimeout(gnrtnum, 100);
-    if (ec === 1) {
-        if (chld) {
-            // console.log(chld.className); // Check if chld is not null or undefined
-            // chld.click();//this line is created for debugging purposes please do not remove the cmnts or else the cmptr will crash while testing
-        }
-    }
+    // disablePieceClicks(); // Disable piece clicks
+
+    setTimeout(() => {
+        gnrtnum(); // Update rn
+        // enablePieceClicks(); // Enable piece clicks after rn is updated
+    }, 100);
+
     dice.addEventListener('animationend', () => {
         dice.style.animation = "";
     }, { once: true });
+
+    trydebugplyr(); // Call after dice number is updated
+    
 });
+
+function disablePieceClicks() {
+    document.querySelectorAll('.piece').forEach(piece => {
+        piece.style.pointerEvents = 'none';
+    });
+}
+
+function enablePieceClicks() {
+    document.querySelectorAll('.piece').forEach(piece => {
+        piece.style.pointerEvents = 'all';
+    });
+}
+
+function trydebugplyr(){
+    if (debugplyr && ec === 1) {
+        if (chldc > 0) {
+            console.log(chld.className); // Check if chld is not null or undefined
+            if (debugplyr) { chld.click(); }
+
+            //player debugging starts here
+            console.log(`chldc: ${chldc}`);
+            // if (chldc > 0) {
+            //     if (chldc === 1) {
+            //         if (debugplyr) chld.click();
+            //     } else if (chldc === 2) {
+            //         if ((chlda[0].c + rn) === 56) {
+            //             chlda[0].click();
+            //         } else if ((chlda[1].c + rn) === 56) {
+            //             chlda[1].click();
+            //         } else if ((chlda[0].c + rn) > 56) {
+            //             if ((chlda[1].c + rn) < 56) {
+            //                 chlda[1].click();
+            //             }
+            //         } else if ((chlda[1].c + rn) > 56) {
+            //             if ((chlda[0].c + rn) < 56) {
+            //                 chlda[0].click();
+            //             }
+            //         } else {
+            //             chld.click();
+            //         }
+            //     } else if (chldc === 3) {
+            //         for (let i = 0; i < 3; i++) {
+            //             if ((chlda[i].c + rn) === 56) {
+            //                 chlda[i].click();
+            //                 break;
+            //             }
+            //         }
+            //         let moved = false;
+            //         for (let i = 0; i < 3; i++) {
+            //             if (!moved && (chlda[i].c + rn) < 56) {
+            //                 chlda[i].click();
+            //                 moved = true;
+            //             }
+            //         }
+            //         if (!moved) {
+            //             chld.click();
+            //         }
+            //     } else if (chldc === 4) {
+            //         for (let i = 0; i < 4; i++) {
+            //             if ((chlda[i].c + rn) === 56) {
+            //                 chlda[i].click();
+            //                 break;
+            //             }
+            //         }
+            //         let moved = false;
+            //         for (let i = 0; i < 4; i++) {
+            //             if (!moved && (chlda[i].c + rn) < 56) {
+            //                 chlda[i].click();
+            //                 moved = true;
+            //             }
+            //         }
+            //         if (!moved) {
+            //             chld.click();
+            //         }
+            //     }
+            // }
+
+            //player debugging ended here
+        }
+    }
+}
+
 let flickTimeout; // Store the timeout ID for flickering
 
 function chngplayer() { // Change player
@@ -68,12 +172,12 @@ function chngplayer() { // Change player
     if (oor === 1) {
         console.log(`changed from ${chld.style.backgroundColor} to ${pc[p]}`);
     }
-    console.log(turn.innerText);
+    console.log(`${pc[p]}'s turn`);
     turn.style.color = pc[p];
     stopFlicker(); // Stop any ongoing flickering
     flickw(); // Start new flickering cycle
     chngz();
-    if (debug) { dice.click(); }
+    if (debugdice) { dice.click(); }
     oor = 0;
 }
 
@@ -98,6 +202,8 @@ function stopFlicker() {
 }
 
 function chngz() {
+    chlda = [];
+    chldc = 0;
     for (let i = 0; i < 4; i++) {
         if (i === p) {
             document.getElementById(`${pc[i]}`).style.pointerEvents = 'all';
@@ -108,12 +214,12 @@ function chngz() {
             let tchld = document.querySelector(`.${pc[i][0]}p${j}`);
             if (tchld) {
                 if (i === p) {
-                    //console.log(`${pc[i][0]}p${j} on`);
                     tchld.style.zIndex = '3';
                     tchld.style.pointerEvents = 'all';
                     chld = tchld;
+                    chlda[chldc] = tchld;
+                    chldc++;
                 } else {
-                    //console.log(`${pc[i][0]}p${j} off`);
                     tchld.style.zIndex = '2';
                     tchld.style.pointerEvents = 'none';
                 }
@@ -248,12 +354,9 @@ function movep() {//moves piece
     chld.y += yp;
     chld.style.transform = `translate(${chld.x}px, ${chld.y}px)`;
     k++;
-    if (chld.c >= 50) {
-        console.log(k);
-    }
-    if (k < 56 && k <= (chld.c + rn) && 56 > (chld.c + rn)) {
+    if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
         setTimeout(findcord, 50);
-    } else {
+    } else if (chld.c + rn <= 56) {
         if (chld) {
             console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             mat[chld.c][chld.className] = 0;
@@ -261,14 +364,23 @@ function movep() {//moves piece
             mat[chld.c][chld.className] = 1;
             pt = 0;
             if (safe()) {
-                console.log('safe');
+                console.log(`${chld.className} moved to safety`);
             } else if (chld.c < 51) {
                 take();
             }
             if (chld.c === 56) {
-                cnt++;
-                console.log(`${cnt}.${chld.style.backgroundColor}`);
-                if (cnt === 3) {
+                let i=0;
+                for(i=0;i<4;i++){
+                    let tchld = document.querySelector(`.${pc[p][0]}p${i}`);
+                    if(tchld&&(tchld.c!==56)){
+                        break;
+                    }
+                }
+                if(i===4){
+                    cnt++;
+                    console.log(`${cnt}.${pc[p]}`);
+                }
+                if(cnt===3){
                     console.log('game over');
                     return;
                 }
@@ -277,9 +389,10 @@ function movep() {//moves piece
                 chngplayer(); // check after
                 dch = 1;
             }
+            rn=0;//changed rn
         }
         if (dch === 0) {
-            if (debug) { dice.click(); }
+            if (debugdice) { dice.click(); }
         } //maybe check ln 85 multiple clicks
     }
 }
@@ -297,9 +410,7 @@ function take() {
     for (let i = 0, m = 39; i < 3; z = (z + 1) % 4, i++, m -= 13) {
         let j = ci[z];
         let indx = (chld.c + m) % 52;
-        // console.log(`${j} : ${indx}`);
         for (let n = 1; n <= 4; n++) {
-            // console.log(`${j}p${n} : ${mat[indx][`${j}p${n}`]}`);
             if (mat[indx][`${j}p${n}`] === 1) {
                 console.log(` ${j}p${n} taken by ${chld.className}`);
                 mat[indx][`${j}p${n}`] = 0;
@@ -333,7 +444,7 @@ function pieceout() {//creates piece or brings out piece
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
-                if (turn.style.color === chld.style.backgroundColor) {
+                if (turn.style.color === chld.style.backgroundColor && (chld.c + rn) <= 56) {
                     console.log(`${chld.className} clicked`);
                     chld = document.querySelector(`.${c}p${i}`);
                     k = 0;
@@ -350,7 +461,9 @@ function pieceout() {//creates piece or brings out piece
             //console.log("all out");
         }
     }
-    if (debug) { dice.click(); }
+    chldc++;
+    if (debugdice) { dice.click(); }
+    // if (debugplyr) { chld.click(); }
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
@@ -390,8 +503,11 @@ function checklmts() {
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
     if (chld) {
-        if ((chld.c + rn) > 56 || chld.c === 56) {
-            console.error("out of range");
+        if ((chld.c + rn) === 56) {
+            cc = 0;
+            console.error(`${chld.className} reached destination`);
+        } else if ((chld.c + rn) > 56 || chld.c === 56) {
+            console.error(`can't move ${chld.className}`);
             oor = 1;
             cc = 1;
         }
@@ -400,7 +516,7 @@ function checklmts() {
         if (prnt.childElementCount === 0) {
             pieceout();
         } else if (prnt.childElementCount > 0) {
-            console.log('yes');
+            // console.log('yes');
         }
     } else {
         if (prnt.childElementCount === 0) {
