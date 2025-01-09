@@ -21,13 +21,20 @@ body {
 
 header {
     grid-area: 1 / 2 / 2 / 3;
-    font-size: xx-large;
-    font-weight: bolder;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-
+#hdng, #stndngs{
+    display: flex;
+    flex-direction: row;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+#stndngs{
+    font-size: medium;
+}
 #board {
     grid-area: 1 / 1 / 3 / 2;
     display: flex;
@@ -102,6 +109,7 @@ header {
 
     #board {
         grid-area: 2 / 1 / 3 / 2;
+        margin-top: 20px;
     }
 
     #theme {
@@ -124,6 +132,7 @@ header {
 
     #board {
         grid-area: 2 / 1 / 3 / 2;
+        margin-top: 20px;
     }
 
     #theme {
@@ -273,6 +282,7 @@ header {
     max-width: 90px;
     max-height: 90px;
     background-color: white;
+    cursor: pointer;
 }
 
 #red div,
@@ -362,6 +372,13 @@ header {
     border-radius: 10px;
     background-color: rgb(255, 255, 255, 0.9);
     box-shadow: 1.5px 1.5px 2px 2px rgb(0, 0, 0, 0.35);
+    transition: transform 0.4s ease-in-out;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.pulse-animation {
+    animation: pulse 0.5s infinite;
 }
 
 #dice div {
@@ -381,9 +398,16 @@ header {
     }
 }
 
-#dice {
-    transition: transform 0.4s ease-in-out;
-    transform-style: preserve-3d;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .rs div,
@@ -391,6 +415,7 @@ header {
 .bs div,
 .ys div {
     border-radius: 50%;
+    cursor: pointer;
     position: absolute;
     z-index: 1;
 }
