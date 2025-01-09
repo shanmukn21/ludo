@@ -9,6 +9,7 @@ let chldc = 0;
 let chlda = [];
 
 const turn = document.getElementById("turn");
+turn.style.color = 'blue';
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
 
@@ -20,6 +21,7 @@ let debugdice = false;
 let debugplyr = false;
 
 //debug code start
+
 document.getElementById("center").addEventListener('click', () => {
     if (debugdice === false) {
         debugdice = true;
@@ -39,6 +41,7 @@ document.querySelector("header").addEventListener('click', () => {
         // document.querySelector("#board").style.pointerEvents = 'all';
     }
 });
+
 //debug code end
 
 let mat = {}; // Initialize the main matrix
@@ -66,16 +69,22 @@ function Initialize() {
 Initialize();
 
 dice.addEventListener('click', () => {
-    dice.style.animation = "dice-rotate 0.1s ease-in-out";
+    if (rd === 1) {
 
-    setTimeout(gnrtnum, 100);
+        rd = 0;
+        if (dice.classList.contains('pulse-animation')) {
+            dice.classList.remove('pulse-animation');
+        }
+        // trydebugplyr();
+        dice.style.animation = "dice-rotate 0.1s ease-in-out";
+        setTimeout(gnrtnum, 200);
 
-    dice.addEventListener('animationend', () => {
-        dice.style.animation = "";
-    }, { once: true });
+        dice.addEventListener('animationend', () => {
+            dice.style.animation = "";
+        }, { once: true });
 
-    // trydebugplyr(); // Call after dice number is updated
-
+        // trydebugplyr(); // Call after dice number is updated
+    }
 });
 
 function trydebugplyr() {
@@ -120,11 +129,15 @@ function chngplayer() { // Change player
     turn.innerText = ``;
     // turn.innerText = `${pc[p]}'s turn`;
     console.log(`${pc[p]}'s turn`);
+    rd = 1;
+    dice.classList.add("pulse-animation");
     turn.style.color = pc[p];
     stopFlicker(); // Stop any ongoing flickering
     flickw(); // Start new flickering cycle
     chngz();
     if (debugdice) { dice.click(); }
+
+    // setTimeout(trydebugplyr, 200);
 }
 
 function flickw() {
@@ -305,6 +318,8 @@ function movep() {//moves piece
     } else if (chld.c + rn <= 56) {
         let opmd = 0;
         if (chld) {
+            rd = 1;
+            dice.classList.add("pulse-animation");
             console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             mat[chld.c][chld.className] = 0;
             chld.c += rn;
@@ -331,6 +346,10 @@ function movep() {//moves piece
                     console.log(`***************`);
                     console.log(`${cnt}.${pc[p]}`);
                     console.log(`***************`);
+                    let tstndngs = document.createElement('div');
+                    tstndngs.style.color=`${pc[p]}`;
+                    tstndngs.innerText=`${cnt}.${pc[p]}`;
+                    document.getElementById('stndngs').appendChild(tstndngs);
                 }
                 if (cnt === 3) {
                     console.log(`***************`);
@@ -349,6 +368,7 @@ function movep() {//moves piece
         }
         if (dch === 0) {
             if (debugdice) { dice.click(); }
+            // setTimeout(trydebugplyr, 200);
         }
     }
 }
@@ -367,10 +387,11 @@ function take() {
         let j = ci[z];
         let indx = (chld.c + m) % 52;
         for (let n = 1; n <= 4; n++) {
-            if (mat[indx][`${j}p${n}`] === 1) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            // console.log(` ${j}p${n}:${mat[indx][`${j}p${n}`]} , m:${m} index:${indx}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 51) {
                 console.log(` ${j}p${n} taken by ${chld.className}`);
                 mat[indx][`${j}p${n}`] = 0;
-                let tmpc = document.querySelector(`.${j}p${n}`);
                 let tmpp = tmpc.parentElement;
                 tmpp.removeChild(tmpc);
                 tmpp.data[n - 1] = 0;
@@ -397,12 +418,15 @@ function pieceout() {//creates piece or brings out piece
             chld.style.zIndex = `3`;
             document.getElementById(`${c}p${i}`).removeChild(document.getElementById(`${c}pi${i}`));
             console.log(`${chld.className} came out`);
+            rn = 0;
+            rd = 1;
+            dice.classList.add("pulse-animation");
             chld.c = 0;
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
                 chld = document.querySelector(`.${c}p${i}`);
-                if (turn.style.color === chld.style.backgroundColor && (chld.c + rn) <= 56) {
+                if (turn.style.color === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
                     console.log(`${chld.className} clicked`);
                     k = 0;
                     if (chld.c > -1) {
@@ -420,7 +444,7 @@ function pieceout() {//creates piece or brings out piece
     }
     chldc++;
     if (debugdice) { dice.click(); }
-    // if (debugplyr) { chld.click(); }
+    // setTimeout(trydebugplyr, 200);
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
@@ -492,3 +516,7 @@ function checklmts() {
         chngplayer();
     }
 }
+
+//check rn carefully to 0
+//try debugplyr just after a mouse click ***carefully
+//there is a problem when debug started with blue
