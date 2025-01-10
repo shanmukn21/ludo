@@ -22,23 +22,16 @@ let debugplyr = false;
 
 //debug code start
 
-document.getElementById("center").addEventListener('click', () => {
+document.querySelector("header").addEventListener('click', () => {
     if (debugdice === false) {
         debugdice = true;
+        debugplyr = true;
         dice.click();
         dice.style.pointerEvents = 'none';
     } else {
         debugdice = false;
-        dice.style.pointerEvents = 'all';
-    }
-});
-document.querySelector("header").addEventListener('click', () => {
-    if (debugplyr === false) {
-        debugplyr = true;
-        // document.querySelector("#board").style.pointerEvents = 'none';
-    } else {
         debugplyr = false;
-        // document.querySelector("#board").style.pointerEvents = 'all';
+        dice.style.pointerEvents = 'all';
     }
 });
 
@@ -75,59 +68,91 @@ dice.addEventListener('click', () => {
         if (dice.classList.contains('pulse-animation')) {
             dice.classList.remove('pulse-animation');
         }
-        // trydebugplyr();
-        dice.style.animation = "dice-rotate 0.1s ease-in-out";
-        setTimeout(gnrtnum, 200);
+        dice.style.animation = "dice-rotate 0.5s ease-in-out";
+        setTimeout(gnrtnum, 250);
 
         dice.addEventListener('animationend', () => {
             dice.style.animation = "";
         }, { once: true });
-
-        // trydebugplyr(); // Call after dice number is updated
     }
 });
 
 function trydebugplyr() {
     if (debugplyr && ec === 1) {
         if (chldc > 0) {
-            console.log(chld.className); // Check if chld is not null or undefined
-            if (debugplyr) { chld.click(); }
-
+            // console.log('try:', chld.className); // Check if chld is not null or undefined
             //player debugging starts here
-            console.log(`chldc: ${chldc}`);
+            // console.log(`chldc: ${chldc}`);
             if (chldc > 0) {
                 if (chldc === 1) {
-                    if (debugplyr) chld.click();
+                    if (rn === 6) {
+                        document.getElementById(`${pc[p]}`).click();
+                    }
+                    else {
+                        chld.click();
+                    }
                 } else if (chldc === 2) {
                     if ((chlda[0].c + rn) === 56) {
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
                         chlda[1].click();
-                    } else if ((chlda[0].c + rn) > 56) {
-                        if ((chlda[1].c + rn) < 56) {
-                            chlda[1].click();
-                        }
-                    } else if ((chlda[1].c + rn) > 56) {
-                        if ((chlda[0].c + rn) < 56) {
-                            chlda[0].click();
-                        }
+                    } else if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && rn===6) {
+                        document.getElementById(`${pc[p]}`).click();
                     } else {
-                        chld.click();
+                        highpriority();
+                    }
+                } else if (chldc === 3) {
+                    if ((chlda[0].c + rn) === 56) {
+                        chlda[0].click();
+                    } else if ((chlda[1].c + rn) === 56) {
+                        chlda[1].click();
+                    } else if ((chlda[2].c + rn) === 56) {
+                        chlda[2].click();
+                    } else if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && (chlda[2].c + rn) >= 56 && rn===6) {
+                        document.getElementById(`${pc[p]}`).click();
+                    } else {
+                        highpriority();
+                    }
+                } else if (chldc === 4) {
+                    if ((chlda[0].c + rn) === 56) {
+                        chlda[0].click();
+                    } else if ((chlda[1].c + rn) === 56) {
+                        chlda[1].click();
+                    } else if ((chlda[2].c + rn) === 56) {
+                        chlda[2].click();
+                    } else if ((chlda[3].c + rn) === 56) {
+                        chlda[3].click();
+                    } else {
+                        highpriority();
                     }
                 }
             }
-
             //player debugging ended here
         }
     }
 }
-
+function highpriority() {
+    console.log('checking high priority');
+    pn = 0;
+    for (let j = 0; j < chldc; j++) {
+        if ((chlda[j].c + rn) <= 56) {
+            if (chlda[j].c + rn > pn) {
+                pn = chlda[j].c + rn;
+                chld = chlda[j];
+                console.log(chld.className,'is now temporary');
+            } else {
+                console.log(chlda[j].className,'is low priority');
+            }
+        }
+    }
+    console.log(chld.className,'is now final');
+    chld.click();
+}
 let flickTimeout; // Store the timeout ID for flickering
 
 function chngplayer() { // Change player
     p = (p + 1) % 4;
     turn.innerText = ``;
-    // turn.innerText = `${pc[p]}'s turn`;
     console.log(`${pc[p]}'s turn`);
     rd = 1;
     dice.classList.add("pulse-animation");
@@ -136,8 +161,6 @@ function chngplayer() { // Change player
     flickw(); // Start new flickering cycle
     chngz();
     if (debugdice) { dice.click(); }
-
-    // setTimeout(trydebugplyr, 200);
 }
 
 function flickw() {
@@ -163,25 +186,28 @@ function stopFlicker() {
 function chngz() {
     chlda = [];
     chldc = 0;
+    let zic = 16;
     for (let i = 0; i < 4; i++) {
         if (i === p) {
             document.getElementById(`${pc[i]}`).style.pointerEvents = 'all';
         } else {
             document.getElementById(`${pc[i]}`).style.pointerEvents = 'none';
         }
-        for (let j = 0; j < 4; j++) {
+        for (let j = 1; j <= 4; j++) {
             let tchld = document.querySelector(`.${pc[i][0]}p${j}`);
             if (tchld) {
                 if (i === p) {
-                    tchld.style.zIndex = '3';
+                    zic++;
+                    tchld.style.zIndex = `${zic}`;
                     tchld.style.pointerEvents = 'all';
                     chld = tchld;
                     chlda[chldc] = tchld;
                     chldc++;
                 } else {
-                    tchld.style.zIndex = '2';
+                    tchld.style.zIndex = '1';
                     tchld.style.pointerEvents = 'none';
                 }
+                // console.log(`${tchld.className} z: ${tchld.style.zIndex}`);
             }
         }
     }
@@ -347,31 +373,53 @@ function movep() {//moves piece
                     console.log(`${cnt}.${pc[p]}`);
                     console.log(`***************`);
                     let tstndngs = document.createElement('div');
-                    tstndngs.style.color=`${pc[p]}`;
-                    tstndngs.innerText=`${cnt}.${pc[p]}`;
+                    tstndngs.style.color = `${pc[p]}`;
+                    tstndngs.innerText = `${cnt}.${pc[p]}`;
                     document.getElementById('stndngs').appendChild(tstndngs);
                 }
                 if (cnt === 3) {
                     console.log(`***************`);
                     console.log('game over');
                     console.log(`***************`);
+                    gameover();
                     debugdice = false;
                     stopFlicker();
+                    document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
                     return;
                 }
             }
             if (rn !== 6 && pt === 0 && opmd === 0) {
-                chngplayer(); // check after
+                chngplayer();
                 dch = 1;
             }
-            rn = 0;//changed rn
+            rn = 0;
         }
         if (dch === 0) {
             if (debugdice) { dice.click(); }
-            // setTimeout(trydebugplyr, 200);
         }
     }
 }
+
+function gameover() {
+    const ids = ["l", "u", "d", "o"];
+    let rotationCount = 0;
+
+    const interval = setInterval(() => {
+
+        const firstColor = pc.shift();
+        pc.push(firstColor);
+
+        ids.forEach((id, index) => {
+            document.getElementById(id).style.color = pc[index];
+        });
+
+        rotationCount++;
+        if (rotationCount === 48) {//4* multiple
+            clearInterval(interval);
+        }
+    }, 60);
+}
+
 function safe() {
     if ([0, 8, 13, 21, 26, 34, 39, 47].includes(chld.c)) {
         return true;
@@ -388,7 +436,6 @@ function take() {
         let indx = (chld.c + m) % 52;
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
-            // console.log(` ${j}p${n}:${mat[indx][`${j}p${n}`]} , m:${m} index:${indx}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 51) {
                 console.log(` ${j}p${n} taken by ${chld.className}`);
                 mat[indx][`${j}p${n}`] = 0;
@@ -415,7 +462,7 @@ function pieceout() {//creates piece or brings out piece
             chld = document.createElement('div');
             chld.className = `${c}` + 'p' + `${i}`;
             chld.style.backgroundColor = `${pc[p]}`;
-            chld.style.zIndex = `3`;
+            chld.style.zIndex = `16`;
             document.getElementById(`${c}p${i}`).removeChild(document.getElementById(`${c}pi${i}`));
             console.log(`${chld.className} came out`);
             rn = 0;
@@ -436,15 +483,15 @@ function pieceout() {//creates piece or brings out piece
                 }
             });
             prnt.appendChild(chld);
+            chlda[chldc] = chld;
+            chldc++;
             ec = 1;//element created or exists
             break;
         } else if (i === 4) {
             //console.log("all out");
         }
     }
-    chldc++;
     if (debugdice) { dice.click(); }
-    // setTimeout(trydebugplyr, 200);
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
@@ -488,10 +535,8 @@ function checklmts() {
         for (i = 1; i <= 4; i++) {
             let tchld = document.querySelector(`.${pc[p][0]}p${i}`);
             if (tchld && ((tchld.c + rn) > 56 || tchld.c === 56)) {
-                // console.log(`${tchld.className} reached or exceeded limit`);
                 cm++;
             } else if (!tchld && rn !== 6) {
-                // console.log(`.${pc[p][0]}p${i} still not out or rn!=6`);
                 stlin++;
             }
         }
@@ -500,23 +545,27 @@ function checklmts() {
             cc = 1;
         }
     }
+    // console.log(prnt.className);
     if (rn === 6) {
+        // console.log('lucky');
         if (prnt.childElementCount === 0) {
             pieceout();
         } else if (prnt.childElementCount > 0) {
             // console.log('yes');
+            trydebugplyr();
         }
     } else {
+        // console.log('unlucky');
         if (prnt.childElementCount === 0) {
             cc = 1;
+        } else {
+            trydebugplyr();
         }
     }
     if (cc === 1) {
         cc = 0;
         chngplayer();
+    } else {
+        // trydebugplyr();
     }
 }
-
-//check rn carefully to 0
-//try debugplyr just after a mouse click ***carefully
-//there is a problem when debug started with blue
