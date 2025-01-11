@@ -2,6 +2,7 @@ console.log(`Blue's turn`);
 
 let cc = 0, cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
 let pt = 0;
+
 //pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57)
 
 let chldc = 0;
@@ -78,42 +79,50 @@ dice.addEventListener('click', () => {
 });
 
 function trydebugplyr() {
-    if (debugplyr && ec === 1) {
+    if (chldc > 0) {
+        //player debugging starts here
         if (chldc > 0) {
-            // console.log('try:', chld.className); // Check if chld is not null or undefined
-            //player debugging starts here
-            // console.log(`chldc: ${chldc}`);
-            if (chldc > 0) {
-                if (chldc === 1) {
-                    if (rn === 6) {
-                        document.getElementById(`${pc[p]}`).click();
-                    }
-                    else {
-                        chld.click();
-                    }
-                } else if (chldc === 2) {
+            if (chldc === 1) {
+                if (rn === 6 && debugplyr && ec === 1) {
+                    document.getElementById(`${pc[p]}`).click();
+                }
+                else {
+                    chld.click();
+                }
+            } else if (chldc === 2) {
+                if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && rn === 6) {
+                    document.getElementById(`${pc[p]}`).click();
+                } else if (clickable()) {
+                    chlda[clickit()].click();
+                } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
                         chlda[1].click();
-                    } else if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && rn===6) {
-                        document.getElementById(`${pc[p]}`).click();
                     } else {
                         highpriority();
                     }
-                } else if (chldc === 3) {
+                }
+            } else if (chldc === 3) {
+                if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && (chlda[2].c + rn) >= 56 && rn === 6) {
+                    document.getElementById(`${pc[p]}`).click();
+                } else if (clickable()) {
+                    chlda[clickit()].click();
+                } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
                         chlda[1].click();
                     } else if ((chlda[2].c + rn) === 56) {
                         chlda[2].click();
-                    } else if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && (chlda[2].c + rn) >= 56 && rn===6) {
-                        document.getElementById(`${pc[p]}`).click();
                     } else {
                         highpriority();
                     }
-                } else if (chldc === 4) {
+                }
+            } else if (chldc === 4) {
+                if (clickable()) {
+                    chlda[clickit()].click();
+                } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
@@ -127,27 +136,45 @@ function trydebugplyr() {
                     }
                 }
             }
-            //player debugging ended here
+        }
+        //player debugging ended here
+    }
+}
+
+function clickable() {
+    let clickp = 0;
+    for (let j = 0; j < chldc; j++) {
+        if ((chlda[j].c + rn) <= 56) {
+            clickp++;
+        }
+    }
+    if (clickp === 1) {
+        return true;
+    }
+    return false;
+}
+
+function clickit(){
+    for (let j = 0; j < chldc; j++) {
+        if ((chlda[j].c + rn) <= 56) {
+            return j;
         }
     }
 }
+
 function highpriority() {
-    console.log('checking high priority');
-    pn = 0;
+    let pn = 0;
     for (let j = 0; j < chldc; j++) {
         if ((chlda[j].c + rn) <= 56) {
             if (chlda[j].c + rn > pn) {
                 pn = chlda[j].c + rn;
                 chld = chlda[j];
-                console.log(chld.className,'is now temporary');
-            } else {
-                console.log(chlda[j].className,'is low priority');
             }
         }
     }
-    console.log(chld.className,'is now final');
     chld.click();
 }
+
 let flickTimeout; // Store the timeout ID for flickering
 
 function chngplayer() { // Change player
@@ -207,7 +234,6 @@ function chngz() {
                     tchld.style.zIndex = '1';
                     tchld.style.pointerEvents = 'none';
                 }
-                // console.log(`${tchld.className} z: ${tchld.style.zIndex}`);
             }
         }
     }
@@ -369,18 +395,18 @@ function movep() {//moves piece
                 }
                 if (i === 5) {
                     cnt++;
-                    console.log(`***************`);
+                    console.log(`*********`);
                     console.log(`${cnt}.${pc[p]}`);
-                    console.log(`***************`);
+                    console.log(`*********`);
                     let tstndngs = document.createElement('div');
                     tstndngs.style.color = `${pc[p]}`;
                     tstndngs.innerText = `${cnt}.${pc[p]}`;
                     document.getElementById('stndngs').appendChild(tstndngs);
                 }
                 if (cnt === 3) {
-                    console.log(`***************`);
+                    console.log(`*********`);
                     console.log('game over');
-                    console.log(`***************`);
+                    console.log(`*********`);
                     gameover();
                     debugdice = false;
                     stopFlicker();
@@ -417,6 +443,7 @@ function gameover() {
         if (rotationCount === 48) {//4* multiple
             clearInterval(interval);
         }
+
     }, 60);
 }
 
@@ -427,6 +454,7 @@ function safe() {
         return false;
     }
 }
+
 function take() {
     let ci = ['b', 'r', 'g', 'y'];
     let z = ci.indexOf(pc[p][0]);
@@ -487,8 +515,6 @@ function pieceout() {//creates piece or brings out piece
             chldc++;
             ec = 1;//element created or exists
             break;
-        } else if (i === 4) {
-            //console.log("all out");
         }
     }
     if (debugdice) { dice.click(); }
@@ -527,11 +553,11 @@ function gnrtnum() {//generates random num b/w 1 to 6
     checklmts();
 }
 
-function checklmts() {
+function checklmts() {// check the limits of the piece with rn
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
     if (chld) {
-        let rchdd = 0, cm = 0, stlin = 0;
+        let cm = 0, stlin = 0;
         for (i = 1; i <= 4; i++) {
             let tchld = document.querySelector(`.${pc[p][0]}p${i}`);
             if (tchld && ((tchld.c + rn) > 56 || tchld.c === 56)) {
@@ -540,22 +566,18 @@ function checklmts() {
                 stlin++;
             }
         }
-        if ((rchdd + cm + stlin) === 4) {
+        if ((cm + stlin) === 4) {
             console.log(`can't move ${pc[p]} pieces for ${rn}`);
             cc = 1;
         }
     }
-    // console.log(prnt.className);
     if (rn === 6) {
-        // console.log('lucky');
-        if (prnt.childElementCount === 0) {
+        if (prnt.childElementCount === 0 || (debugplyr && ec === 1 && prnt.childElementCount < 4)) {
             pieceout();
         } else if (prnt.childElementCount > 0) {
-            // console.log('yes');
             trydebugplyr();
         }
     } else {
-        // console.log('unlucky');
         if (prnt.childElementCount === 0) {
             cc = 1;
         } else {
@@ -565,7 +587,5 @@ function checklmts() {
     if (cc === 1) {
         cc = 0;
         chngplayer();
-    } else {
-        // trydebugplyr();
     }
 }
