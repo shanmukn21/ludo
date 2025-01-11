@@ -1,10 +1,11 @@
 console.log(`Blue's turn`);
 
-let cc = 0, cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
-let pt = 0;
-
+let cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
+let pt = 0;//piece taken
+let wo = [];
 //pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57)
 
+const ids = ["l", "u", "d", "o"];
 let chldc = 0;
 
 let chlda = [];
@@ -86,13 +87,13 @@ function trydebugplyr() {
                 if (rn === 6 && debugplyr && ec === 1) {
                     document.getElementById(`${pc[p]}`).click();
                 }
-                else {
+                else if (rn !== 6) {
                     chld.click();
                 }
             } else if (chldc === 2) {
                 if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && rn === 6) {
                     document.getElementById(`${pc[p]}`).click();
-                } else if (clickable()) {
+                } else if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
@@ -106,7 +107,7 @@ function trydebugplyr() {
             } else if (chldc === 3) {
                 if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && (chlda[2].c + rn) >= 56 && rn === 6) {
                     document.getElementById(`${pc[p]}`).click();
-                } else if (clickable()) {
+                } else if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
@@ -120,7 +121,7 @@ function trydebugplyr() {
                     }
                 }
             } else if (chldc === 4) {
-                if (clickable()) {
+                if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1) {
                     if ((chlda[0].c + rn) === 56) {
@@ -154,7 +155,7 @@ function clickable() {
     return false;
 }
 
-function clickit(){
+function clickit() {
     for (let j = 0; j < chldc; j++) {
         if ((chlda[j].c + rn) <= 56) {
             return j;
@@ -181,6 +182,7 @@ function chngplayer() { // Change player
     p = (p + 1) % 4;
     turn.innerText = ``;
     console.log(`${pc[p]}'s turn`);
+    rn = 0;
     rd = 1;
     dice.classList.add("pulse-animation");
     turn.style.color = pc[p];
@@ -370,8 +372,6 @@ function movep() {//moves piece
     } else if (chld.c + rn <= 56) {
         let opmd = 0;
         if (chld) {
-            rd = 1;
-            dice.classList.add("pulse-animation");
             console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             mat[chld.c][chld.className] = 0;
             chld.c += rn;
@@ -394,6 +394,7 @@ function movep() {//moves piece
                     }
                 }
                 if (i === 5) {
+                    wo[cnt] = pc[p];
                     cnt++;
                     console.log(`*********`);
                     console.log(`${cnt}.${pc[p]}`);
@@ -404,10 +405,12 @@ function movep() {//moves piece
                     document.getElementById('stndngs').appendChild(tstndngs);
                 }
                 if (cnt === 3) {
+                    findloser();
                     console.log(`*********`);
                     console.log('game over');
                     console.log(`*********`);
                     gameover();
+                    setTimeout(clrchng, 2880);
                     debugdice = false;
                     stopFlicker();
                     document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
@@ -419,6 +422,8 @@ function movep() {//moves piece
                 dch = 1;
             }
             rn = 0;
+            rd = 1;
+            dice.classList.add("pulse-animation");
         }
         if (dch === 0) {
             if (debugdice) { dice.click(); }
@@ -427,7 +432,6 @@ function movep() {//moves piece
 }
 
 function gameover() {
-    const ids = ["l", "u", "d", "o"];
     let rotationCount = 0;
 
     const interval = setInterval(() => {
@@ -445,6 +449,27 @@ function gameover() {
         }
 
     }, 60);
+}
+
+function findloser() {
+    let i = 0, j = 0;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+            if (pc[i] === wo[j]) {
+                break;
+            }
+        }
+        if(j===4){
+            wo[cnt]=pc[i];
+            break;
+        }
+    }
+}
+
+function clrchng() {
+    ids.forEach((id, index) => {
+        document.getElementById(id).style.color = wo[index];
+    });
 }
 
 function safe() {
@@ -554,7 +579,7 @@ function gnrtnum() {//generates random num b/w 1 to 6
 }
 
 function checklmts() {// check the limits of the piece with rn
-    let c = pc[p][0];
+    let cc = 0, c = pc[p][0];//cc:change color or player
     prnt = document.querySelector(`.${c}s`);
     if (chld) {
         let cm = 0, stlin = 0;
