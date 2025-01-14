@@ -1,28 +1,37 @@
-console.log(`Blue's turn`);
-
 let dca = 1;
-let cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"], wc = ["blue", "red", "green", "yellow"];
+let cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"];
 let pt = 0;//piece taken
 let wo = [];
 let colors = [];
 let skip = [];
-let nop = null;
-let nopo = null;
+let nop = 4;
+let nopo = 0;
 
 //pc:player color, rn:random number, x&y:coordinates, p:indeces of pc, k:step(1-57)
 
-const ids = ["l", "u", "d", "o"];
 let chldc = 0;
 
 let chlda = [];
 
-const turn = document.getElementById("turn");
-turn.style.color = 'blue';
 const dice = document.getElementById("dice");
 const b3 = document.getElementById("b3");
+const start = document.getElementById("start");
+const home = document.getElementById("home");
+const restart = document.getElementById("restart");
+const plyrc = document.getElementById("plyrc");
+const plyrl = document.getElementById("plyrl");
+const plyrr = document.getElementById("plyrr");
+const pesc = document.getElementById("pesc");
+const pcsl = document.getElementById("pcsl");
+const pcsr = document.getElementById("pcsr");
+const intro = document.getElementById("intro");
+const btm = document.getElementById("btm");
+const body = document.querySelector('body');
 
 let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
+
+let state = body.innerHTML;
 
 chld.c = -1;
 let debugdice = false;
@@ -30,26 +39,19 @@ let debugplyr = false;
 
 let flickTimeout; // Store the timeout ID for flickering
 
-//debug code start
-
-document.querySelector("header").addEventListener('click', () => {
-    if (debugdice === false) {
-        debugdice = true;
-        debugplyr = true;
-        dice.click();
-        dice.style.pointerEvents = 'none';
-    } else {
-        debugdice = false;
-        debugplyr = false;
-        dice.style.pointerEvents = 'all';
-    }
-});
-
-//debug code end
-
 let mat = {}; // Initialize the main matrix
 
 function Initialize() {
+    dca = 1;
+    cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"];
+    pt = 0;
+    wo = [];
+    colors = [];
+    skip = [];
+    chldc = 0;
+    chlda = [];
+    chld.c = -1;
+
     for (let i = 0; i <= 56; i++) {
         mat[i] = {}; // Initialize each index as an object
         for (let j of ['b', 'r', 'g', 'y']) { // Use 'of' with array elements
@@ -68,14 +70,6 @@ function Initialize() {
             }
         });
     }
-    do {
-        nop = prompt('no.of players:(1-4)');
-    } while (nop < 2 || nop > 4);
-    console.log('nop:', nop);
-    do {
-        nopo = prompt('no.of pieces out:(0-4)');
-    } while (nopo < 0 || nopo > 4);
-    console.log('nopo:', nopo);
     for (let i = (nop - 1); i >= 0; i--) {
         colors[i] = pc[i];
         p = i;
@@ -85,16 +79,58 @@ function Initialize() {
             pieceout();
         }
     }
+    console.log(`Blue's turn`);
     for (let i = nop; i < 4; i++) {
         skip[i] = pc[i];
     }
     p = 0;
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
-    turn.innerText = ``;
     flickw(); // Start new flickering cycle
 }
-Initialize();
+
+plyrl.addEventListener('click', () => {
+    if (nop > 2) {
+        nop--;
+        plyrc.innerText = `${nop}`;
+    }
+});
+
+plyrr.addEventListener('click', () => {
+    if (nop < 4) {
+        nop++;
+        plyrc.innerText = `${nop}`;
+    }
+});
+
+pcsl.addEventListener('click', () => {
+    if (nopo > 0) {
+        nopo--;
+        pesc.innerText = `${nopo}`;
+    }
+});
+
+pcsr.addEventListener('click', () => {
+    if (nopo < 4) {
+        nopo++;
+        pesc.innerText = `${nopo}`;
+    }
+});
+
+start.addEventListener('click', () => {
+    Initialize();
+    intro.style.display = 'none';
+    btm.style.display = 'flex';
+    state = body.innerHTML;
+});
+
+home.addEventListener('click', () => {
+    location.reload();
+});
+
+restart.addEventListener('click', () => {
+    body.innerHTML = state;
+});
 
 dice.addEventListener('click', () => {
     if (rd === 1) {
@@ -241,12 +277,10 @@ function highpriority() {
 
 function chngplayer() { // Change player
     p = (p + 1) % 4;
-    turn.innerText = ``;
     console.log(`${pc[p]}'s turn`);
     rn = 0;
     rd = 1;
     dice.classList.add("pulse-animation");
-    turn.style.color = pc[p];
     stopFlicker(); // Stop any ongoing flickering
     flickw(); // Start new flickering cycle
     chngz();
@@ -467,15 +501,16 @@ function movep() {//moves piece
                     let tstndngs = document.createElement('div');
                     tstndngs.style.color = `${pc[p]}`;
                     tstndngs.innerText = `${cnt}.${pc[p]}`;
-                    document.getElementById('stndngs').appendChild(tstndngs);
+                    if (body.style.flexDirection === 'row') {
+                        document.getElementById('stndngsd').appendChild(tstndngs);
+                    } else {
+                        document.getElementById('stndngsm').appendChild(tstndngs);
+                    }
                 }
-                if (cnt === (nop-1)) {
-                    findloser();
+                if (cnt === (nop - 1)) {
                     console.log(`*********`);
                     console.log('game over');
                     console.log(`*********`);
-                    gameover();
-                    setTimeout(clrchng, 2880);
                     debugdice = false;
                     stopFlicker();
                     document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
@@ -494,47 +529,6 @@ function movep() {//moves piece
             if (debugdice) { dice.click(); }
         }
     }
-}
-
-function gameover() {
-    let rotationCount = 0;
-
-    const interval = setInterval(() => {
-
-        const firstColor = pc.shift();
-        pc.push(firstColor);
-
-        ids.forEach((id, index) => {
-            document.getElementById(id).style.color = pc[index];
-        });
-
-        rotationCount++;
-        if (rotationCount === 48) {//4* multiple
-            clearInterval(interval);
-        }
-
-    }, 60);
-}
-
-function findloser() {
-    let i = 0, j = 0;
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            if (pc[i] === wo[j]) {
-                break;
-            }
-        }
-        if (j === 4) {
-            wo[cnt] = pc[i];
-            break;
-        }
-    }
-}
-
-function clrchng() {
-    ids.forEach((id, index) => {
-        document.getElementById(id).style.color = wo[index];
-    });
 }
 
 function safe() {
@@ -593,7 +587,7 @@ function pieceout() {//creates piece or brings out piece
                 console.log(`clicking ${chld.className}`);
                 chld = document.querySelector(`.${c}p${i}`);
                 console.log(`or ${chld.className}`);
-                if (turn.style.color === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
+                if (pc[p] === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
                     console.log(`${chld.className} clicked`);
                     k = 0;
                     if (chld.c > -1) {
