@@ -9,10 +9,15 @@
 </head>
 
 <body>
-    <header>
-        <div id="hdng"><p id="l">L</p><p id="u">U</p><p id="d">D</p><p id="o">O</p></div>
-        <div id="stndngs"></div>
-    </header>
+    <div id="mbl">
+        <div class="hdng">
+            <p class="l">L</p>
+            <p class="u">U</p>
+            <p class="d">D</p>
+            <p class="o">O</p>
+        </div>
+        <div id="stndngsd"></div>
+    </div>
     <div id="board">
         <div id="red">
             <div id="rp2" class="piece">
@@ -160,14 +165,41 @@
         </div>
     </div>
     <div id="theme">
-        <p id="turn">blue's turn</p>
-        <div id="dice" class="pulse-animation">
-            <div id="b1"></div>
-            <div id="b2"></div>
-            <div id="b3"></div>
-            <div id="b4"></div>
-            <div id="b5"></div>
-            <div id="b6"></div>
+        <div id="dtp">
+            <div class="hdng">
+                <p class="l">L</p>
+                <p class="u">U</p>
+                <p class="d">D</p>
+                <p class="o">O</p>
+            </div>
+            <div id="stndngsm"></div>
+        </div>
+        <div id="intro">
+            <div id="players">
+                <p class="ph">Players</p>
+                <div id="plns"><button id="plyrl">-</button>
+                    <p id="plyrc">4</p><button id="plyrr">+</button>
+                </div>
+            </div>
+            <div id="pieces">
+                <p class="ph">Piece's Out</p>
+                <div id="pins"><button id="pcsl">-</button>
+                    <p id="pesc">0</p><button id="pcsr">+</button>
+                </div>
+            </div>
+            <button id="start">Start</button>
+        </div>
+        <div id="btm">
+            <button id="home">Home</button>
+            <div id="dice" class="pulse-animation">
+                <div id="b1"></div>
+                <div id="b2"></div>
+                <div id="b3"></div>
+                <div id="b4"></div>
+                <div id="b5"></div>
+                <div id="b6"></div>
+            </div>
+            <button id="restart">Restart</button>
         </div>
     </div>
     <script src="script.js"></script>
