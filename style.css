@@ -348,22 +348,22 @@ header {
     background-color: blue;
 }
 
-#rb,
+.rb,
 #rt {
     background-color: red;
 }
 
-#gb,
+.gb,
 #gt {
     background-color: green;
 }
 
-#bb,
+.bb,
 #bt {
     background-color: blue;
 }
 
-#yb,
+.yb,
 #yt {
     background-color: yellow;
 }
@@ -463,7 +463,7 @@ header {
     border-radius: 50%;
 }
 
-#str {
+.str {
     background-image: url(star.png);
     background-repeat: no-repeat;
     background-size: contain;
