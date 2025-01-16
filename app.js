@@ -676,10 +676,14 @@ function checklmts() {// check the limits of the piece with rn
         if ((cm + stlin) === 4 && rn !== 6) {
             console.log(`can't move ${pc[p]} pieces for ${rn}`);
             cc = 1;
-        } else if ((cm + stlin) === 4 && rn === 6 && debugdice) {
-            console.log('hi');
+        } else if ((cm + stlin) === 4 && rn === 6) {
+            console.log(`can't move ${pc[p]} pieces for ${rn} but lucky`);
+            rn = 0;
             rd = 1;
-            dice.click();
+            dice.classList.add("pulse-animation");
+            if (debugdice) {
+                dice.click();
+            }
         }
     } else {
         console.log(`${chld.className} does not exists`);
@@ -693,7 +697,7 @@ function checklmts() {// check the limits of the piece with rn
             console.log('trying auto debug');
             trydebugplyr();
         }
-    } else {
+    } else if (rn !== 0) {
         console.log('unlucky');
         if (prnt.childElementCount === 0) {
             console.log('color change.')
