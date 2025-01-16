@@ -121,6 +121,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         display: flex;
     }
 
@@ -131,7 +132,7 @@ body {
     #theme {
         min-width: 225px;
         max-width: 225px;
-        min-height: 100px;
+        min-height: 88px;
     }
 
     #btm {
@@ -167,14 +168,14 @@ body {
     }
 
     #theme {
-        min-height: 100px;
+        min-height: 88px;
     }
 }
 
 
 @media (max-width:950px)and (min-height:800px) {
 
-    /*tab portait*/
+    /*tab portrait*/
     body {
         flex-direction: column;
         padding: 0px;
@@ -191,6 +192,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         display: flex;
     }
 
@@ -201,7 +203,7 @@ body {
     #theme {
         min-width: 225px;
         max-width: 225px;
-        min-height: 100px;
+        min-height: 88px;
     }
 
     #btm {
@@ -316,6 +318,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         margin-top: 13%;
     }
 }
@@ -326,6 +329,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         margin-top: 13%;
     }
 }
@@ -346,6 +350,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         margin-top: 8%;
     }
 }
@@ -366,6 +371,7 @@ body {
     }
 
     #mbl {
+        min-width: 225px;
         margin-top: 3%;
     }
 }
