@@ -26,6 +26,9 @@ const pcsl = document.getElementById("pcsl");
 const pcsr = document.getElementById("pcsr");
 const intro = document.getElementById("intro");
 const btm = document.getElementById("btm");
+const center = document.getElementById("center");
+const confirm = document.getElementById("confirm");
+const no = document.getElementById("no");
 const body = document.querySelector('body');
 
 let chld = document.querySelector('body');
@@ -42,15 +45,6 @@ let flickTimeout; // Store the timeout ID for flickering
 let mat = {}; // Initialize the main matrix
 
 function Initialize() {
-    dca = 1;
-    cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"];
-    pt = 0;
-    wo = [];
-    colors = [];
-    skip = [];
-    chldc = 0;
-    chlda = [];
-    chld.c = -1;
 
     for (let i = 0; i <= 56; i++) {
         mat[i] = {}; // Initialize each index as an object
@@ -65,6 +59,7 @@ function Initialize() {
         prnt = document.querySelector(`.${c}s`);
         prnt.data = new Array(0, 0, 0, 0);
         document.getElementById(`${pc[i]}`).addEventListener('click', () => {
+            cntrc = 0;
             if (rn === 6 && prnt.childElementCount < 4) {
                 pieceout();
             }
@@ -129,10 +124,33 @@ home.addEventListener('click', () => {
 });
 
 restart.addEventListener('click', () => {
-    body.innerHTML = state;
+    btm.style.display = "none";
+    confirm.style.display = "flex";
+});
+
+no.addEventListener('click', () => {
+    btm.style.display = "flex";
+    confirm.style.display = "none";
+});
+
+let cntrc = 0;
+center.addEventListener('click', () => {
+    cntrc++;
+    if (cntrc === 4) {
+        cntrc = 0;
+        if (debugplyr) {
+            debugplyr = false;
+            debugdice = false;
+        } else {
+            debugplyr = true;
+            debugdice = true;
+            dice.click();
+        }
+    }
 });
 
 dice.addEventListener('click', () => {
+    cntrc = 0;
     if (rd === 1) {
         rd = 0;
         if (dice.classList.contains('pulse-animation')) {
@@ -584,6 +602,7 @@ function pieceout() {//creates piece or brings out piece
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
+                cntrc = 0;
                 console.log(`clicking ${chld.className}`);
                 chld = document.querySelector(`.${c}p${i}`);
                 console.log(`or ${chld.className}`);
