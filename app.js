@@ -58,6 +58,7 @@ function Initialize() {
         let c = pc[i][0];
         prnt = document.querySelector(`.${c}s`);
         prnt.data = new Array(0, 0, 0, 0);
+        prnt.r = 0;
         document.getElementById(`${pc[i]}`).addEventListener('click', () => {
             cntrc = 0;
             if (rn === 6 && prnt.childElementCount < 4) {
@@ -74,7 +75,6 @@ function Initialize() {
             pieceout();
         }
     }
-    console.log(`Blue's turn`);
     for (let i = nop; i < 4; i++) {
         skip[i] = pc[i];
     }
@@ -166,8 +166,6 @@ dice.addEventListener('click', () => {
 });
 
 function trydebugplyr() {
-    console.log(chlda);
-    console.log(chldc);
     if (chldc > 0) {
         //player debugging starts here
         if (chldc > 0) {
@@ -185,10 +183,8 @@ function trydebugplyr() {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1 && dca === 0) {
                     if ((chlda[0].c + rn) === 56) {
-                        console.log(`${chlda[0].className} can reach destination`);
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
-                        console.log(`${chlda[1].className} can reach destination`);
                         chlda[1].click();
                     } else {
                         highpriority();
@@ -201,13 +197,10 @@ function trydebugplyr() {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1 && dca === 0) {
                     if ((chlda[0].c + rn) === 56) {
-                        console.log(`${chlda[0].className} can reach destination`);
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
-                        console.log(`${chlda[1].className} can reach destination`);
                         chlda[1].click();
                     } else if ((chlda[2].c + rn) === 56) {
-                        console.log(`${chlda[2].className} can reach destination`);
                         chlda[2].click();
                     } else {
                         highpriority();
@@ -218,16 +211,12 @@ function trydebugplyr() {
                     chlda[clickit()].click();
                 } else if (debugplyr && ec === 1 && dca === 0) {
                     if ((chlda[0].c + rn) === 56) {
-                        console.log(`${chlda[0].className} can reach destination`);
                         chlda[0].click();
                     } else if ((chlda[1].c + rn) === 56) {
-                        console.log(`${chlda[1].className} can reach destination`);
                         chlda[1].click();
                     } else if ((chlda[2].c + rn) === 56) {
-                        console.log(`${chlda[2].className} can reach destination`);
                         chlda[2].click();
                     } else if ((chlda[3].c + rn) === 56) {
-                        console.log(`${chlda[3].className} can reach destination`);
                         chlda[3].click();
                     } else {
                         highpriority();
@@ -246,7 +235,6 @@ function clickable() {
             clickp++;
         }
     }
-    console.log('clickp:', clickp);
     dca = 0;
     if (clickp === 1) {
         dca = 0;
@@ -259,7 +247,6 @@ function clickable() {
             }
         }
         if (j === chldc) {
-            console.log('all movable elements are on same spot');
             dca = 1;
             highpriority();
         } else {
@@ -272,7 +259,6 @@ function clickable() {
 function clickit() {
     for (let j = 0; j < chldc; j++) {
         if ((chlda[j].c + rn) <= 56) {
-            console.log('clicking the single piece possible');
             return j;
         }
     }
@@ -285,17 +271,14 @@ function highpriority() {
             if (chlda[j].c + rn > pn) {
                 pn = chlda[j].c + rn;
                 chld = chlda[j];
-                console.log(`${chld.className} is temporary`);
             }
         }
     }
-    console.log(`${chld.className} is permanent`);
     chld.click();
 }
 
 function chngplayer() { // Change player
     p = (p + 1) % 4;
-    console.log(`${pc[p]}'s turn`);
     rn = 0;
     rd = 1;
     dice.classList.add("pulse-animation");
@@ -472,6 +455,9 @@ function findcord() {//finds coordinates of piece
                 y = 1;
             }
         }
+        if (k === 56) {
+            prnt.r++;
+        }
         setTimeout(movep, 50);
     }
 }
@@ -483,21 +469,75 @@ function movep() {//moves piece
     chld.x += xp;
     chld.y += yp;
     chld.style.transform = `translate(${chld.x}px, ${chld.y}px)`;
+    chld.innerText = '';
     k++;
     if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
         setTimeout(findcord, 50);
     } else if (chld.c + rn <= 56) {
         let opmd = 0;
         if (chld) {
-            console.log(`moved ${chld.className} from ${chld.c} to ${k - 1}`);
             mat[chld.c][chld.className] = 0;
+            checkz();
             chld.c += rn;
+            if (prnt.r > 1) {
+                if (prnt.r === 2) {
+                    for (let j = 1, jc = 1; j <= 2 && jc <= 4; jc++) {
+                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
+                        if (tchld && (tchld.c === 56)) {
+                            tchld.style.minWidth = '7px';
+                            tchld.style.minHeight = '7px';
+                            if (j === 1) {
+                                tchld.style.transform = `translate(${tchld.x + 1.5}px, ${tchld.y + 5.5}px)`;
+                            } else if (j === 2) {
+                                tchld.style.transform = `translate(${tchld.x + 1.5}px, ${tchld.y - 2.5}px)`;
+                            }
+                            j++;
+                        }
+                    }
+                } else if (prnt.r === 3) {
+                    for (let j = 1, jc = 1; j <= 3 && jc <= 4; jc++) {
+                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
+                        if (tchld && (tchld.c === 56)) {
+                            tchld.style.minWidth = '7px';
+                            tchld.style.minHeight = '7px';
+                            if (j === 1) {
+                                tchld.style.transform = `translate(${tchld.x - 2}px, ${tchld.y + 5.5}px)`;
+                            } else if (j === 2) {
+                                tchld.style.transform = `translate(${tchld.x - 2}px, ${tchld.y - 2.5}px)`;
+                            } else if (j === 3) {
+                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y + 1.5}px)`;
+                            }
+                            j++;
+                        }
+                    }
+                } else if (prnt.r === 4) {
+                    for (let j = 1, jc = 1; j <= 4 && jc <= 4; jc++) {
+                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
+                        if (tchld && (tchld.c === 56)) {
+                            tchld.style.minWidth = '7px';
+                            tchld.style.minHeight = '7px';
+                            if (j === 1) {
+                                tchld.style.transform = `translate(${tchld.x - 2.5}px, ${tchld.y + 5.5}px)`;
+                            } else if (j === 2) {
+                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y - 2.5}px)`;
+                            } else if (j === 3) {
+                                tchld.style.transform = `translate(${tchld.x - 2.5}px, ${tchld.y - 2.5}px)`;
+                            } else if (j === 4) {
+                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y + 5.5}px)`;
+                            }
+                            j++;
+                        }
+                    }
+                }
+            }
             mat[chld.c][chld.className] = 1;
             pt = 0;
             if (safe()) {
-                console.log(`${chld.className} moved to safety`);
             } else if (chld.c < 51) {
                 take();
+            }
+            if (chld.c < 56) {
+                teamup();
             }
             if (chld.c === 56) {
                 opmd = 1;
@@ -513,9 +553,6 @@ function movep() {//moves piece
                 if (i === 5) {
                     wo[cnt] = pc[p];
                     cnt++;
-                    console.log(`*********`);
-                    console.log(`${cnt}.${pc[p]}`);
-                    console.log(`*********`);
                     let tstndngs = document.createElement('div');
                     tstndngs.style.color = `${pc[p]}`;
                     tstndngs.innerText = `${cnt}.${pc[p]}`;
@@ -526,10 +563,11 @@ function movep() {//moves piece
                     document.getElementById('stndngsm').appendChild(tstndngsm);
                 }
                 if (cnt === (nop - 1)) {
-                    console.log(`*********`);
-                    console.log('game over');
-                    console.log(`*********`);
                     debugdice = false;
+                    dice.classList.remove("pulse-animation");
+                    dice.style.pointerEvents = 'none';
+                    rd = 0;
+                    rn = 0;
                     stopFlicker();
                     document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
                     return;
@@ -556,7 +594,50 @@ function safe() {
         return false;
     }
 }
-
+function checkz() {
+    let j = pc[p][0];
+    let indx = chld.c;
+    let nc = 0;
+    for (let n = 1; n <= 4; n++) {
+        let tmpc = document.querySelector(`.${j}p${n}`);
+        if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56 && tmpc.className !== chld.className) {
+            nc++;
+        }
+    }
+    if (nc > 1) {
+        for (let n = 1; n <= 4; n++) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
+                tmpc.innerText = `${nc}`;
+            }
+        }
+    } else {
+        for (let n = 1; n <= 4; n++) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
+                tmpc.innerText = ``;
+            }
+        }
+    }
+}
+function teamup() {
+    let j = pc[p][0];
+    let indx = chld.c;
+    let nc = 1;
+    for (let n = 1; n <= 4; n++) {
+        let tmpc = document.querySelector(`.${j}p${n}`);
+        if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56 && tmpc.className !== chld.className) {
+            nc++;
+        }
+    } if (nc > 1) {
+        for (let n = 1; n <= 4; n++) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
+                tmpc.innerText = `${nc}`;
+            }
+        }
+    }
+}
 function take() {
     let ci = ['b', 'r', 'g', 'y'];
     let z = ci.indexOf(pc[p][0]);
@@ -567,7 +648,6 @@ function take() {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 51) {
-                console.log(` ${j}p${n} taken by ${chld.className}`);
                 mat[indx][`${j}p${n}`] = 0;
                 let tmpp = tmpc.parentElement;
                 tmpp.removeChild(tmpc);
@@ -594,7 +674,6 @@ function pieceout() {//creates piece or brings out piece
             chld.style.backgroundColor = `${pc[p]}`;
             chld.style.zIndex = `16`;
             document.getElementById(`${c}p${i}`).removeChild(document.getElementById(`${c}pi${i}`));
-            console.log(`${chld.className} came out`);
             rn = 0;
             rd = 1;
             dice.classList.add("pulse-animation");
@@ -603,11 +682,8 @@ function pieceout() {//creates piece or brings out piece
             chld.y = 0;
             chld.addEventListener('click', () => {
                 cntrc = 0;
-                console.log(`clicking ${chld.className}`);
                 chld = document.querySelector(`.${c}p${i}`);
-                console.log(`or ${chld.className}`);
                 if (pc[p] === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
-                    console.log(`${chld.className} clicked`);
                     k = 0;
                     if (chld.c > -1) {
                         k = chld.c + 1;
@@ -619,6 +695,8 @@ function pieceout() {//creates piece or brings out piece
             chlda[chldc] = chld;
             chldc++;
             ec = 1;//element created or exists
+            mat[0][chld.className] = 1;
+            teamup();
             break;
         }
     }
@@ -626,7 +704,6 @@ function pieceout() {//creates piece or brings out piece
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
-    console.log('dice rolled:', rn);
 
     //change face of the dice or roll dice
     for (let i = 0; i < rn; i++) {
@@ -659,11 +736,9 @@ function gnrtnum() {//generates random num b/w 1 to 6
 }
 
 function checklmts() {// check the limits of the piece with rn
-    console.log(`checking ${pc[p]} limits`);
     let cc = 0, c = pc[p][0];//cc: change color or player
     prnt = document.querySelector(`.${c}s`);
     if (chld) {
-        console.log(`${chld.className} exists`);
         let cm = 0, stlin = 0;
         for (i = 1; i <= 4; i++) {
             let tchld = document.querySelector(`.${pc[p][0]}p${i}`);
@@ -674,10 +749,8 @@ function checklmts() {// check the limits of the piece with rn
             }
         }
         if ((cm + stlin) === 4 && rn !== 6) {
-            console.log(`can't move ${pc[p]} pieces for ${rn}`);
             cc = 1;
         } else if ((cm + stlin) === 4 && rn === 6) {
-            console.log(`can't move ${pc[p]} pieces for ${rn} but lucky`);
             rn = 0;
             rd = 1;
             dice.classList.add("pulse-animation");
@@ -686,24 +759,17 @@ function checklmts() {// check the limits of the piece with rn
             }
         }
     } else {
-        console.log(`${chld.className} does not exists`);
     }
     if (rn === 6) {
-        console.log('lucky');
         if (prnt.childElementCount === 0 || (debugplyr && ec === 1 && prnt.childElementCount < 4)) {
-            console.log('piece out:')
             pieceout();
         } else if (prnt.childElementCount > 0) {
-            console.log('trying auto debug');
             trydebugplyr();
         }
     } else if (rn !== 0) {
-        console.log('unlucky');
         if (prnt.childElementCount === 0) {
-            console.log('color change.')
             cc = 1;
         } else {
-            console.log('trying auto debug');
             trydebugplyr();
         }
     }

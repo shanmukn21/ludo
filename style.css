@@ -420,6 +420,12 @@ body {
     min-height: 10px;
     max-width: 10px;
     max-height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    line-height: 0px;
+    font-size: 8px;
 }
 
 #center {
