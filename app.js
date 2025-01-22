@@ -287,8 +287,10 @@ function chngplayer() { // Change player
     chngz();
     if (wo.includes(pc[p]) || skip.includes(pc[p])) {
         chngplayer();
-    } else if (debugdice) {
-        dice.click();
+    } else {
+        if (debugdice) {
+            dice.click();
+        }
     }
 }
 
@@ -577,11 +579,11 @@ function movep() {//moves piece
                 chngplayer();
                 dch = 1;
             }
+        }
+        if (dch === 0) {
             rn = 0;
             rd = 1;
             dice.classList.add("pulse-animation");
-        }
-        if (dch === 0) {
             if (debugdice) { dice.click(); }
         }
     }
@@ -592,6 +594,30 @@ function safe() {
         return true;
     } else {
         return false;
+    }
+}
+function takec(j, indx) {
+    let nc = 0;
+    for (let n = 1; n <= 4; n++) {
+        let tmpc = document.querySelector(`.${j}p${n}`);
+        if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56 && tmpc.className !== chld.className) {
+            nc++;
+        }
+    }
+    if (nc > 1) {
+        for (let n = 1; n <= 4; n++) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
+                tmpc.innerText = `${nc}`;
+            }
+        }
+    } else {
+        for (let n = 1; n <= 4; n++) {
+            let tmpc = document.querySelector(`.${j}p${n}`);
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
+                tmpc.innerText = ``;
+            }
+        }
     }
 }
 function checkz() {
@@ -657,6 +683,7 @@ function take() {
                 tmprc.id = `${j}pi${n}`;
                 tmprp.appendChild(tmprc);
                 pt = 1;
+                takec(j, indx);
                 return;
             }
         }
@@ -704,7 +731,6 @@ function pieceout() {//creates piece or brings out piece
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
-
     //change face of the dice or roll dice
     for (let i = 0; i < rn; i++) {
         document.getElementById(`b${i + 1}`).style.display = "block";
