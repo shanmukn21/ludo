@@ -48,7 +48,13 @@ body {
     font-size: xx-large;
     font-weight: bolder;
 }
-
+.hdng{
+    pointer-events: all;
+    cursor: pointer;
+}
+#stndngsm{
+    flex-direction: column;
+}
 #stndngsd,
 #stndngsm {
     width: 100%;
@@ -82,17 +88,21 @@ body {
 
 .l {
     color: blue;
+    pointer-events: all;
 }
 
 .u {
+    pointer-events: all;
     color: red;
 }
 
 .d {
+    pointer-events: all;
     color: green;
 }
 
 .o {
+    pointer-events: all;
     color: yellow;
 }
 
@@ -228,7 +238,7 @@ body {
     }
 }
 
-@media (max-width:490px) {
+@media (max-width:499px) {
     body {
         flex-direction: column;
         gap: 3%;
@@ -717,6 +727,7 @@ button {
 
 @media (min-width:1250px)and (min-height:700px) {
     body {
+        overflow: hidden;
         height: 33.35vh;
     }
 }

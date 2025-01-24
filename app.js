@@ -1,5 +1,5 @@
 let dca = 1;
-let cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 6, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"];
+let cnt = 0, x = 0, y = 0, k = 0, p = 0, rd = 1, rn = 0, mp = 0, ec = 0, pc = ["blue", "red", "green", "yellow"];
 let pt = 0;//piece taken
 let wo = [];
 let colors = [];
@@ -26,19 +26,62 @@ const pcsl = document.getElementById("pcsl");
 const pcsr = document.getElementById("pcsr");
 const intro = document.getElementById("intro");
 const btm = document.getElementById("btm");
-const center = document.getElementById("center");
 const confirm = document.getElementById("confirm");
 const no = document.getElementById("no");
 const body = document.querySelector('body');
 
+const lh = document.querySelector('#bt');
+const uh = document.querySelector('#rt');
+const dh = document.querySelector('#gt');
+const oh = document.querySelector('#yt');
+
+lh.addEventListener('click', () => {
+    if (ldc === 0 && udc === 1 && ddc === 1) {
+        ldc = 1;
+    } else {
+        ldc = 0; udc = 0; ddc = 0;
+    }
+});
+
+uh.addEventListener('click', () => {
+    if (ldc === 0 && udc === 0 && ddc === 1) {
+        udc = 1;
+    } else {
+        ldc = 0; udc = 0; ddc = 0;
+    }
+});
+
+dh.addEventListener('click', () => {
+    if (ldc === 0 && udc === 0 && ddc === 0) {
+        ddc = 1;
+    } else {
+        ldc = 0; udc = 0; ddc = 0;
+    }
+});
+let dbg = false;
+let debugdice = false;
+let debugplyr = false;
+
+oh.addEventListener('click', () => {
+    if (ldc === 1 && udc === 1 && ddc === 1) {
+        if (dbg) {
+            debugplyr = false;
+            debugdice = false;
+        } else {
+            dbg = true;
+            debugplyr = true;
+            debugdice = true;
+        }
+    } else {
+        ldc = 0; udc = 0; ddc = 0;
+    }
+});
 let chld = document.querySelector('body');
 let prnt = document.querySelector('body');
 
-let state = body.innerHTML;
+let ldc = 0, udc = 0, ddc = 0;
 
 chld.c = -1;
-let debugdice = false;
-let debugplyr = false;
 
 let flickTimeout; // Store the timeout ID for flickering
 
@@ -60,7 +103,6 @@ function Initialize() {
         prnt.data = new Array(0, 0, 0, 0);
         prnt.r = 0;
         document.getElementById(`${pc[i]}`).addEventListener('click', () => {
-            cntrc = 0;
             if (rn === 6 && prnt.childElementCount < 4) {
                 pieceout();
             }
@@ -82,6 +124,9 @@ function Initialize() {
     let c = pc[p][0];
     prnt = document.querySelector(`.${c}s`);
     flickw(); // Start new flickering cycle
+    if (dbg) {
+        console.log("blue's turn");
+    }
 }
 
 plyrl.addEventListener('click', () => {
@@ -116,7 +161,6 @@ start.addEventListener('click', () => {
     Initialize();
     intro.style.display = 'none';
     btm.style.display = 'flex';
-    state = body.innerHTML;
 });
 
 home.addEventListener('click', () => {
@@ -124,33 +168,18 @@ home.addEventListener('click', () => {
 });
 
 restart.addEventListener('click', () => {
-    btm.style.display = "none";
-    confirm.style.display = "flex";
-});
-
-no.addEventListener('click', () => {
-    btm.style.display = "flex";
-    confirm.style.display = "none";
-});
-
-let cntrc = 0;
-center.addEventListener('click', () => {
-    cntrc++;
-    if (cntrc === 4) {
-        cntrc = 0;
-        if (debugplyr) {
-            debugplyr = false;
-            debugdice = false;
-        } else {
-            debugplyr = true;
-            debugdice = true;
-            dice.click();
-        }
+    if (cnt === (nop - 1)) {
+        location.reload();
+    } else {
+        confirm.style.display = "flex";
     }
 });
 
+no.addEventListener('click', () => {
+    confirm.style.display = "none";
+});
+
 dice.addEventListener('click', () => {
-    cntrc = 0;
     if (rd === 1) {
         rd = 0;
         if (dice.classList.contains('pulse-animation')) {
@@ -165,7 +194,7 @@ dice.addEventListener('click', () => {
     }
 });
 
-function trydebugplyr() {
+function onlymove() {
     if (chldc > 0) {
         //player debugging starts here
         if (chldc > 0) {
@@ -233,24 +262,46 @@ function clickable() {
     for (let j = 0; j < chldc; j++) {
         if ((chlda[j].c + rn) <= 56) {
             clickp++;
+            chlda[j].cli = 1;
+        } else {
+            chlda[j].cli = 0;
         }
     }
     dca = 0;
     if (clickp === 1) {
         dca = 0;
         return true;
-    } else if (clickp === chldc) {//trying to move a single piece when two or pieces are on same spot if chldc===clickp
+    } else if (clickp === chldc) {//trying to move a single piece when two or more pieces are on same spot if chldc===clickp
         let j = 0;
         for (j = 0; j < chldc; j++) {
             if ((chlda[0].c) !== chlda[j].c) {
                 break;
             }
         }
-        if (j === chldc) {
+        if (j === chldc) {//if all pieces are on same spot
             dca = 1;
             highpriority();
         } else {
             dca = 0;
+        }
+    } else if (clickp !== chldc) {
+        let j = 0, l = 0, tchld = null;
+        for (j = 0; j < chldc; j++) {
+            if (chlda[j].cli === 1) {
+                tchld = chlda[j];
+                break;
+            }
+        }
+        if (j !== chldc) {
+            for (j = 0; j < chldc; j++) {
+                if (tchld.c === chlda[j].c) {
+                    l++;
+                }
+            }
+            if (l === clickp) {
+                dca = 1;
+                highpriority();
+            }
         }
     }
     return false;
@@ -288,6 +339,9 @@ function chngplayer() { // Change player
     if (wo.includes(pc[p]) || skip.includes(pc[p])) {
         chngplayer();
     } else {
+        if (dbg) {
+            console.log(`${pc[p]}'s turn`);
+        }
         if (debugdice) {
             dice.click();
         }
@@ -480,6 +534,9 @@ function movep() {//moves piece
         if (chld) {
             mat[chld.c][chld.className] = 0;
             checkz();
+            if (dbg) {
+                console.log(`${chld.className}: ${chld.c} to ${chld.c + rn}`);
+            }
             chld.c += rn;
             if (prnt.r > 1) {
                 if (prnt.r === 2) {
@@ -675,6 +732,9 @@ function take() {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 51) {
                 mat[indx][`${j}p${n}`] = 0;
+                if (dbg) {
+                    console.log(`${tmpc.className} taken by ${chld.className}`);
+                }
                 let tmpp = tmpc.parentElement;
                 tmpp.removeChild(tmpc);
                 tmpp.data[n - 1] = 0;
@@ -698,6 +758,9 @@ function pieceout() {//creates piece or brings out piece
             prnt.data[i - 1] = 1;
             chld = document.createElement('div');
             chld.className = `${c}` + 'p' + `${i}`;
+            if (dbg) {
+                console.log(`${chld.className} came out`);
+            }
             chld.style.backgroundColor = `${pc[p]}`;
             chld.style.zIndex = `16`;
             document.getElementById(`${c}p${i}`).removeChild(document.getElementById(`${c}pi${i}`));
@@ -708,7 +771,6 @@ function pieceout() {//creates piece or brings out piece
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
-                cntrc = 0;
                 chld = document.querySelector(`.${c}p${i}`);
                 if (pc[p] === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
                     k = 0;
@@ -731,6 +793,9 @@ function pieceout() {//creates piece or brings out piece
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
+    if (dbg) {
+        console.log('dice rolled:', rn);
+    }
     //change face of the dice or roll dice
     for (let i = 0; i < rn; i++) {
         document.getElementById(`b${i + 1}`).style.display = "block";
@@ -787,19 +852,22 @@ function checklmts() {// check the limits of the piece with rn
     } else {
     }
     if (rn === 6) {
-        if (prnt.childElementCount === 0 || (debugplyr && ec === 1 && prnt.childElementCount < 4)) {
+        if (prnt.childElementCount === 0 || (prnt.childElementCount === prnt.r && prnt.r < 4) || (debugplyr && ec === 1 && prnt.childElementCount < 4)) {
             pieceout();
         } else if (prnt.childElementCount > 0) {
-            trydebugplyr();
+            onlymove();
         }
     } else if (rn !== 0) {
         if (prnt.childElementCount === 0) {
             cc = 1;
         } else {
-            trydebugplyr();
+            onlymove();
         }
     }
     if (cc === 1) {
+        if (dbg) {
+            console.log('cant move pieces for', rn);
+        }
         cc = 0;
         chngplayer();
     }
