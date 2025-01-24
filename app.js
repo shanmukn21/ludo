@@ -199,14 +199,14 @@ function onlymove() {
         //player debugging starts here
         if (chldc > 0) {
             if (chldc === 1) {
-                if (rn === 6 && debugplyr && ec === 1) {
+                if (rn === 6 && ((debugplyr && ec === 1) || ((chlda[0].c + rn) > 56))) {
                     document.getElementById(`${pc[p]}`).click();
                 }
                 else if (rn !== 6) {
                     chld.click();
                 }
             } else if (chldc === 2) {
-                if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && rn === 6) {
+                if ((chlda[0].c + rn) > 56 && (chlda[1].c + rn) > 56 && rn === 6) {
                     document.getElementById(`${pc[p]}`).click();
                 } else if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
@@ -220,7 +220,7 @@ function onlymove() {
                     }
                 }
             } else if (chldc === 3) {
-                if ((chlda[0].c + rn) >= 56 && (chlda[1].c + rn) >= 56 && (chlda[2].c + rn) >= 56 && rn === 6) {
+                if ((chlda[0].c + rn) > 56 && (chlda[1].c + rn) > 56 && (chlda[2].c + rn) > 56 && rn === 6) {
                     document.getElementById(`${pc[p]}`).click();
                 } else if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
