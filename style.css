@@ -3,87 +3,37 @@
     padding: 0;
     border: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
 body {
-    width: 100%;
-    height: 33.35vh;
-    display: flex;
-    flex-direction: row;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 25vh 50vh 25vh;
+    grid-template-columns: 100vw;
+    place-items: center;
     background-image: url(bg.jpg);
-    background-size: 200%;
-    justify-content: space-evenly;
-    align-items: center;
-    zoom: 3;
-    font-family: Arial, Helvetica, sans-serif;
+    background-size: cover;
+    position: relative;
 }
 
-#dtp {
+header {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-#mbl {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#btm {
-    min-height: 150px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
 }
 
 .hdng,
-#stndngsd,
-#stndngsm {
+#stndngsd {
     display: flex;
     flex-direction: row;
-    font-size: xx-large;
     font-weight: bolder;
-}
-.hdng{
-    pointer-events: all;
-    cursor: pointer;
-}
-#stndngsm{
-    flex-direction: column;
-}
-#stndngsd,
-#stndngsm {
-    width: 100%;
-    justify-content: space-evenly;
-    font-size: medium;
-    text-transform: capitalize;
-}
-
-#board {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 0px;
-    row-gap: 0px;
-    min-width: 225px;
-    min-height: 225px;
-    max-width: 225px;
-    max-height: 225px;
-    z-index: 1;
-}
-
-#theme {
-    min-width: 150px;
-    max-width: 150px;
-    min-height: 225px;
-    max-height: 225px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
+    justify-content: center;
 }
 
 .l {
@@ -106,432 +56,228 @@ body {
     color: yellow;
 }
 
-@media (max-width:1250px) {
-    body {
-        height: 40vh;
-        zoom: 2.5;
-    }
+#container {
+    height: min(100%, 100vw);
+    width: min(100%, 50vh);
+    grid-row: 2 / 3;
 }
 
-@media (max-width:879px) {/*portrait*/
+#board {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 40% 20% 40%;
+    grid-template-rows: 40% 20% 40%;
+}
 
+@media (orientation: landscape) {
     body {
-        flex-direction: column;
-        padding: 0px;
-        height: 32vh;
-        zoom: 2;
+        grid-template-rows: auto min(20vw, 40vh) min(30vw, 60vh) auto;
+        grid-template-columns: 50vw 50vw;
     }
 
-    #dtp {
-        display: none;
+    #container {
+        height: min(100vh, 50vw);
+        width: min(100%, 100vh);
+        grid-row: 1 / 5;
+        grid-column: 1 / 2;
+        padding: 0%;
     }
 
-    #intro div {
-        width: 46%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        display: flex;
-    }
-
-    #board {
-        margin-top: 20px;
+    header {
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
     }
 
     #theme {
-        min-width: 225px;
-        max-width: 225px;
-        min-height: 88px;
+        grid-row: 3 / 4;
+        grid-column: 2 / 3;
     }
 
     #btm {
-        min-height: 10vh;
         display: none;
+        grid-template-rows: min(10vw,20vh) min(20vw,40vh);
+        grid-template-columns: 20vw;
+        place-items: center;
+    }
+
+    #intro {
+        grid-template-columns: 20vw 20vw;
+        grid-template-rows: min(10vw,20vh) min(20vw,40vh);
+    }
+
+    #stndngsd {
         width: 100%;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-evenly;
-    }
-
-}
-
-@media (max-width:862px)and (max-height:700px) {
-
-    /* tab landscape */
-    body {
-        padding: 0px;
-        height: 32vh;
-        zoom: 3;
-    }
-
-    #dtp {
-        display: flex;
-    }
-
-    #mbl {
-        display: none;
-    }
-
-    #board {
-        margin-top: 20px;
-    }
-
-    #theme {
-        min-height: 88px;
+        font-size: 7vmin;
+        gap: 4vmin;
     }
 }
 
-
-@media (max-width:950px)and (min-height:800px) {
-
-    /*tab portrait*/
-    body {
-        flex-direction: column;
-        padding: 0px;
-        height: 32vh;
-        zoom: 3;
-    }
-
-    #dtp {
-        display: none;
-    }
-
-    #intro div {
-        width: 46%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        display: flex;
-    }
-
-    #board {
-        margin-top: 20px;
-    }
-
-    #theme {
-        min-width: 225px;
-        max-width: 225px;
-        min-height: 88px;
+@media (orientation: portrait) {
+    #intro {
+        grid-template-rows: 15vh 10vh;
+        grid-template-columns: min(50vw, 25vh) min(50vw, 25vh);
     }
 
     #btm {
-        min-height: 10vh;
         display: none;
+        grid-template-columns: min(50vw, 25vh) min(50vw, 25vh);
+        grid-template-rows: 10vh;
+        place-items: center;
+    }
+
+    #stndngsd {
         width: 100%;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-evenly;
-    }
-}
-
-
-@media (min-width:499px)and (max-height:800px) {
-    body {
-        height: 40vh;
-        gap: 0%;
-    }
-
-    #mbl {
-        margin-top: 0%;
-    }
-}
-
-@media (max-width:499px) {
-    body {
-        flex-direction: column;
-        gap: 3%;
-        padding: 0px;
-        height: 32vh;
-        zoom: 1.8;
-    }
-
-    #dtp {
-        display: none;
-    }
-
-    #intro div {
-        width: 46%;
-    }
-
-    #mbl {
-        margin-top: 28%;
-        display: flex;
-    }
-
-    #theme {
-        min-width: 225px;
-        max-width: 225px;
-    }
-
-    #btm {
-        min-height: 10vh;
-        flex-direction: row;
-        min-height: 10vh;
-    }
-}
-
-@media (max-width:425px) {
-    body {
-        zoom: 1.60;
-    }
-}
-
-@media (max-width:375px) {
-    body {
-        zoom: 1.40;
-    }
-}
-
-@media (max-width:320px) {
-    body {
-        zoom: 1.25;
-    }
-}
-
-@media (max-width:290px) {
-    body {
-        zoom: 1.15;
-    }
-}
-
-@media (max-width:260px) {
-    body {
-        zoom: 1;
-    }
-}
-
-@media (max-width:225px) {
-    body {
-        zoom: 0.85;
-    }
-}
-
-@media (max-width:200px) {
-    body {
-        zoom: 0.75;
-    }
-}
-
-@media (max-width:170px) {
-    body {
-        zoom: 0.65;
-    }
-}
-
-
-/*for mobiles*/
-@media (max-height:900px)and (max-width:499px) {
-    body {
-        gap: 9.5%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        margin-top: 13%;
-    }
-}
-
-@media (max-height:875px)and (max-width:499px) {
-    body {
-        gap: 9.5%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        margin-top: 13%;
-    }
-}
-
-@media (max-height:850px)and (max-width:499px) {
-    body {
-        gap: 9.5%;
-    }
-
-    #mbl {
-        margin-top: 13%;
-    }
-}
-
-@media (max-height:800px)and (max-width:499px) {
-    body {
-        gap: 6.5%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        margin-top: 8%;
-    }
-}
-
-@media (max-height:750px)and (max-width:499px) {
-    body {
-        gap: 4.5%;
-    }
-
-    #mbl {
-        margin-top: 6%;
-    }
-}
-
-@media (max-height:700px)and (max-width:499px) {
-    body {
-        gap: 0%;
-    }
-
-    #mbl {
-        min-width: 225px;
-        margin-top: 3%;
+        font-size: 7vmin;
+        gap: 7vmin;
     }
 }
 
 #greenmid,
 #bluemid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     background-color: white;
-    min-width: 45px;
-    max-width: 45px;
-    min-height: 90px;
-    max-height: 90px;
-    display: flex;
-    flex-wrap: wrap;
 }
 
 #redmid,
 #yellowmid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     background-color: white;
-    min-width: 90px;
-    max-width: 90px;
-    min-height: 45px;
-    max-height: 45px;
-    display: flex;
-    flex-wrap: wrap;
 }
 
-#greenmid div,
-#bluemid div,
-#redmid div,
-#yellowmid div {
-    border: 1px solid rgb(0, 0, 0, 0.35);
-    padding: 1.5px;
-    min-width: 15px;
-    min-height: 15px;
-    max-width: 15px;
-    max-height: 15px;
+#greenmid>div,
+#bluemid>div,
+#redmid>div,
+#yellowmid>div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border: 0.15vmin solid rgba(0, 0, 0, 0.3);
 }
 
-#greenmid div div,
-#bluemid div div,
-#redmid div div,
-#yellowmid div div {
-    border: 1px solid black;
-    padding: 0px;
-    min-width: 10px;
-    min-height: 10px;
-    max-width: 10px;
-    max-height: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    line-height: 0px;
-    font-size: 8px;
+#greenmid>#gs,
+#bluemid>#bs,
+#redmid>#rs,
+#yellowmid>#ys {
+    border: 0vmin solid rgba(0, 0, 0, 0.3);
+}
+
+#greenmid>div>div,
+#bluemid>div>div,
+#redmid>div>div,
+#yellowmid>div>div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 1;
+    padding: 10%;
+    background-color: transparent;
+    transition: all 0.1s ease-out;
+}
+
+#greenmid>div>div>div,
+#bluemid>div>div>div,
+#redmid>div>div>div,
+#yellowmid>div>div>div {
+    width: 100%;
+    height: 100%;
+    border: 0.5vmin solid black;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.5vmax;
+    color: white;
+    cursor: pointer;
+    z-index: inherit;
 }
 
 #center {
     z-index: 0;
-    width: 45px;
-    height: 45px;
     overflow: hidden;
-    position: relative;
 }
 
 #rotated {
-    rotate: -45deg;
-    display: flex;
-    flex-wrap: wrap;
-    zoom: 1.41;
-    position: absolute;
-    top: -9px;
-    right: -12px;
-    left: -7.5px;
-}
-
-#rotated div {
-    width: 22.5px;
-    height: 22.5px;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 71% 71%;
+    grid-template-rows: 71% 71%;
+    transform: rotate(-45deg) translateY(-21%) translateX(-20%);
 }
 
 #red,
 #green,
 #yellow,
 #blue {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 15px;
-    row-gap: 15px;
-    padding: 7.5px;
-    min-width: 60px;
-    min-height: 60px;
-    max-width: 90px;
-    max-height: 90px;
-    background-color: white;
+    padding: 16.66%;
     cursor: pointer;
+    border: 0.15vmin solid rgba(0, 0, 0, 0.3);
 }
 
-#red div,
-#green div,
-#yellow div,
-#blue div {
-    min-width: 15px;
-    min-height: 15px;
-    max-width: 15px;
-    max-height: 15px;
+.blink {
+    background: white;
+    width: 100%;
+    height: 100%;
+    padding: 12.5%;
+    display: grid;
+    grid-template-columns: 33.33% 33.33%;
+    grid-template-rows: 33.33% 33.33%;
+    gap: 33.33%;
+}
+
+#red .blink div,
+#green .blink div,
+#yellow .blink div,
+#blue .blink div {
     border-radius: 50%;
 }
 
-#red div div,
-#green div div,
-#yellow div div,
-#blue div div {
-    border: 1px solid black;
-    padding: 0px;
-    min-width: 10px;
-    min-height: 10px;
-    max-width: 10px;
-    max-height: 10px;
+#red .blink div div,
+#green .blink div div,
+#yellow .blink div div,
+#blue .blink div div {
+    border: 0.5vmin solid black;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
 }
 
 #red {
-    border: 15px solid red;
+    background: red;
 }
 
 #green {
-    border: 15px solid green;
+    background: green;
 }
 
 #blue {
-    border: 15px solid blue;
+    background: blue;
 }
 
 #yellow {
-    border: 15px solid yellow;
+    background: yellow;
 }
 
-#red div div {
+#red .blink div div {
     background-color: red;
 }
 
-#green div div {
+#green .blink div div {
     background-color: green;
 }
 
-#yellow div div {
+#yellow .blink div div {
     background-color: yellow;
 }
 
-#blue div div {
+#blue .blink div div {
     background-color: blue;
 }
 
@@ -555,73 +301,158 @@ body {
     background-color: yellow;
 }
 
-#red div {
-    border: 3px solid red;
+#red .blink div {
+    border: 0.5vmin solid red;
 }
 
-#green div {
-    border: 3px solid green;
+#green .blink div {
+    border: 0.5vmin solid green;
 }
 
-#blue div {
-    border: 3px solid blue;
+#blue .blink div {
+    border: 0.5vmin solid blue;
 }
 
-#yellow div {
-    border: 3px solid yellow;
+#yellow .blink div {
+    border: 0.5vmin solid yellow;
 }
 
-#middle div {
-    min-width: 15px;
-    max-width: 15px;
-    min-height: 15px;
-    max-height: 15px;
-    border: 1px solid black;
+@keyframes rotateDice {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+
+    100% {
+        transform: rotateX(360deg) rotateY(360deg);
+    }
 }
 
-#dice {
-    width: 50px;
-    height: 50px;
-    min-width: 36px;
-    min-height: 36px;
+.dice-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 25% 50% 25%;
+}
+
+.dice {
+    height: 100%;
+    aspect-ratio: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(180deg) rotateY(0deg);
+    transition: transform 0.5s linear;
+    grid-column: 2/3;
+}
+
+.dicepd{
+    font-size: min(5vmax,10vh);
+}
+
+.side {
     display: flex;
     flex-wrap: wrap;
-    padding: 7px;
     justify-content: center;
-    justify-content: space-between;
     align-items: center;
-    border-radius: 10px;
-    background-color: rgb(255, 255, 255, 0.9);
-    box-shadow: 1.5px 1.5px 2px 2px rgb(0, 0, 0, 0.35);
-    transition: transform 0.4s ease-in-out;
-    transform-style: preserve-3d;
+    background: rgb(255, 255, 255);
+    border-radius: max(1.5vw, 1.5vh);
+    box-shadow: 0vw 0vw 0.1vw 0.1vw rgb(0, 0, 0, 0.35);
     cursor: pointer;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 10%;
+}
+
+.side>div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: rgb(255, 255, 255);
+    border-radius: 1.5vmax;
+    cursor: pointer;
+    width: 80%;
+    height: 80%;
+}
+
+.side-1 {
+    transform: rotateX(000deg) translateZ(min(5vmax,10vh));
+}
+
+.side-2 {
+    transform: rotateY(270deg) translateZ(min(5vmax,10vh));
+}
+
+.side-2 div {
+    column-gap: 25%;
+}
+
+.side-3 {
+    transform: rotateX(270deg) translateZ(min(5vmax,10vh));
+}
+
+.side-3 div {
+    column-gap: 5%;
+}
+
+.side-4 div {
+    column-gap: 25%;
+}
+
+.side-4 {
+    transform: rotateX(090deg) translateZ(min(5vmax,10vh));
+}
+
+.side-5 {
+    transform: rotateY(090deg) translateZ(min(5vmax,10vh));
+    column-gap: 30%;
+    padding: 10%;
+}
+
+.side-5 div {
+    column-gap: 40%;
+}
+
+.side-5 #b3 {
+    margin: 0% 10%;
+}
+
+.side-6 {
+    transform: rotateX(180deg) translateZ(min(5vmax,10vh));
+}
+
+.side-6 div {
+    column-gap: 5%;
+}
+
+.side div div {
+    background-color: black;
+    width: 30%;
+    height: 30%;
+    min-width: 30%;
+    min-height: 30%;
+    max-width: 30%;
+    max-height: 30%;
+    border-radius: 50%;
 }
 
 .pulse-animation {
     animation: pulse 0.5s infinite;
 }
 
-#dice div {
-    background-color: black;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+#intro {
+    display: grid;
+    place-items: center;
+    color: white;
 }
 
-#intro {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: large;
-    gap: 15px;
+#start {
+    grid-column: 1/3;
 }
 
 #players,
 #pieces {
-    width: 90%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -638,14 +469,15 @@ body {
 
 
 #intro div button {
-    font-size: x-large;
     background-color: transparent;
     color: yellow;
-    border: 2px solid yellow;
-    padding: 0px;
-    margin: 5px;
-    min-width: 20px;
-    max-height: 20px;
+    border: 0.5vmin solid yellow;
+    padding: 0%;
+    margin: 1.5vmin;
+    min-width: 3.5vmax;
+    min-height: 3.5vmax;
+    max-width: 3.5vmax;
+    max-height: 3.5vmax;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -668,29 +500,13 @@ body {
     color: white;
 }
 
-button {
-    padding: 2px 4px;
-    border-radius: 4px;
-    max-width: fit-content;
-}
-
-@keyframes dice-rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(2880deg);
-    }
-}
-
 @keyframes pulse {
     0% {
         transform: scale(1);
     }
 
     50% {
-        transform: scale(1.2);
+        transform: scale(1.5);
     }
 
     100% {
@@ -698,14 +514,22 @@ button {
     }
 }
 
-.rs div,
-.gs div,
-.bs div,
-.ys div {
-    border-radius: 50%;
-    cursor: pointer;
-    position: absolute;
-    z-index: 1;
+.rs,
+.gs,
+.bs,
+.ys {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border: 0;
+}
+
+#rs,
+#gs,
+#bs,
+#ys {
+    border: 0;
 }
 
 .bp4 {
@@ -720,53 +544,69 @@ button {
 
 }
 
-#piece {
+#confirm {
     background-color: white;
-    border: 3px solid red;
-}
-
-@media (min-width:1250px)and (min-height:700px) {
-    body {
-        overflow: hidden;
-        height: 33.35vh;
-    }
-}
-
-@media (max-width:879px)and (min-height:700px) {
-    body {
-        height: 32vh;
-    }
-}
-
-@media (min-width:879px)and (max-width:960px) {
-    body {
-        zoom: 2.3;
-        height: 43vh;
-    }
-}
-
-#confirm{
-    padding: 10px;
-    background-color: white;
-    z-index:44;
+    z-index: 44;
     position: absolute;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: end;
-    border-radius: 10px;
+    border-radius: 1vw;
+    padding: 1vw;
+    box-shadow: 0vw 0vw 0.5vw 0.5vw rgb(0, 0, 0, 0.35);
+    transform: scale(0);
+    transition: all 0.3s ease;
 }
-#cnfrmb{
+
+#cnfrmb {
     display: flex;
     flex-direction: row;
-    gap:10px;
+    gap: 3vmin;
 }
-#no{
+
+#no {
     display: block;
     background-color: green;
     color: white;
-    border-radius: 4px;
 }
 
-button{
+button {
     cursor: pointer;
+    padding: 0.5vw 1vw;
+    border-radius: 1vw;
+    max-width: fit-content;
+    transition: transfrom 0.3s ease;
+}
+
+button:active {
+    transform: scale(0.9);
+}
+
+p,
+button {
+    font-size: max(3vw, 3vh);
+}
+
+h3 {
+    font-size: max(6vw, 6vh);
+}
+
+h4 {
+    font-size: max(4vw, 4vh);
+}
+
+#fullscreen {
+    position: absolute;
+    right: 3.5vmin;
+    top: 3.5vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5vmin;
+    height: 5vmin;
+}
+
+#fullscreen svg {
+    width: 100%;
+    height: 100%;
 }

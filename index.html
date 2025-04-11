@@ -3,178 +3,183 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Play Ludo online in a vibrant, responsive interface designed for all devices. Enjoy smooth, animated gameplay with up to 4 local players and customizable settings.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="icon.png" type="image/x-icon">
     <title>Ludo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="mbl">
+    <header id="mbl">
         <div class="hdng">
-            <p class="l">L</p>
-            <p class="u">U</p>
-            <p class="d">D</p>
-            <p class="o">O</p>
+            <h3 class="l">L</h3>
+            <h3 class="u">U</h3>
+            <h3 class="d">D</h3>
+            <h3 class="o">O</h3>
         </div>
         <div id="stndngsd"></div>
-    </div>
-    <div id="board">
-        <div id="red">
-            <div id="rp2" class="piece">
-                <div id="rpi2"></div>
+    </header>
+    <div id="container">
+        <div id="board">
+            <div id="red">
+                <div class="blink">
+                    <div id="rp2" class="piece">
+                        <div id="rpi2"></div>
+                    </div>
+                    <div id="rp4" class="piece">
+                        <div id="rpi4"></div>
+                    </div>
+                    <div id="rp1" class="piece">
+                        <div id="rpi1"></div>
+                    </div>
+                    <div id="rp3" class="piece">
+                        <div id="rpi3"></div>
+                    </div>
+                </div>
             </div>
-            <div id="rp4" class="piece">
-                <div id="rpi4"></div>
+            <div id="greenmid">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="gb"></div>
+                <div class="gb gs" id="gs"></div>
+                <div class="str"></div>
+                <div class="gb"></div>
+                <div></div>
+                <div></div>
+                <div class="gb"></div>
+                <div></div>
+                <div></div>
+                <div class="gb"></div>
+                <div></div>
+                <div></div>
+                <div class="gb"></div>
+                <div></div>
             </div>
-            <div id="rp1" class="piece">
-                <div id="rpi1"></div>
+            <div id="green">
+                <div class="blink">
+                    <div id="gp1" class="piece">
+                        <div id="gpi1"></div>
+                    </div>
+                    <div id="gp2" class="piece">
+                        <div id="gpi2"></div>
+                    </div>
+                    <div id="gp3" class="piece">
+                        <div id="gpi3"></div>
+                    </div>
+                    <div id="gp4" class="piece">
+                        <div id="gpi4"></div>
+                    </div>
+                </div>
             </div>
-            <div id="rp3" class="piece">
-                <div id="rpi3"></div>
+            <div id="redmid">
+                <div></div>
+                <div class="rb rs" id="rs"></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="rb"></div>
+                <div class="rb"></div>
+                <div class="rb"></div>
+                <div class="rb"></div>
+                <div class="rb"></div>
+                <div></div>
+                <div></div>
+                <div class="str"></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
-        </div>
-        <div id="greenmid">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div class="gb"></div>
-            <div class="gb gs"></div>
-            <div class="str"></div>
-            <div class="gb"></div>
-            <div></div>
-            <div></div>
-            <div class="gb"></div>
-            <div></div>
-            <div></div>
-            <div class="gb"></div>
-            <div></div>
-            <div></div>
-            <div class="gb"></div>
-            <div></div>
-        </div>
-        <div id="green">
-            <div id="gp1" class="piece">
-                <div id="gpi1"></div>
+            <div id="center">
+                <div id="rotated">
+                    <div id="rt"></div>
+                    <div id="gt"></div>
+                    <div id="bt"></div>
+                    <div id="yt"></div>
+                </div>
             </div>
-            <div id="gp2" class="piece">
-                <div id="gpi2"></div>
+            <div id="yellowmid">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="str"></div>
+                <div></div>
+                <div></div>
+                <div class="yb"></div>
+                <div class="yb"></div>
+                <div class="yb"></div>
+                <div class="yb"></div>
+                <div class="yb"></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="ys yb" id="ys"></div>
+                <div></div>
             </div>
-            <div id="gp3" class="piece">
-                <div id="gpi3"></div>
+            <div id="blue">
+                <div class="blink">
+                    <div id="bp4" class="piece">
+                        <div id="bpi4"></div>
+                    </div>
+                    <div id="bp3" class="piece">
+                        <div id="bpi3"></div>
+                    </div>
+                    <div id="bp2" class="piece">
+                        <div id="bpi2"></div>
+                    </div>
+                    <div id="bp1" class="piece">
+                        <div id="bpi1"></div>
+                    </div>
+                </div>
             </div>
-            <div id="gp4" class="piece">
-                <div id="gpi4"></div>
+            <div id="bluemid">
+                <div></div>
+                <div class="bb"></div>
+                <div></div>
+                <div></div>
+                <div class="bb"></div>
+                <div></div>
+                <div></div>
+                <div class="bb"></div>
+                <div></div>
+                <div></div>
+                <div class="bb"></div>
+                <div class="str"></div>
+                <div class="bb bs" id="bs"></div>
+                <div class="bb"></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
-        </div>
-        <div id="redmid">
-            <div></div>
-            <div class="rb rs"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div class="rb"></div>
-            <div class="rb"></div>
-            <div class="rb"></div>
-            <div class="rb"></div>
-            <div class="rb"></div>
-            <div></div>
-            <div></div>
-            <div class="str"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div id="center">
-            <div id="rotated">
-                <div id="rt"></div>
-                <div id="gt"></div>
-                <div id="bt"></div>
-                <div id="yt"></div>
-            </div>
-        </div>
-        <div id="yellowmid">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div class="str"></div>
-            <div></div>
-            <div></div>
-            <div class="yb"></div>
-            <div class="yb"></div>
-            <div class="yb"></div>
-            <div class="yb"></div>
-            <div class="yb"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div class="ys yb"></div>
-            <div></div>
-        </div>
-        <div id="blue">
-            <div id="bp4" class="piece">
-                <div id="bpi4"></div>
-            </div>
-            <div id="bp3" class="piece">
-                <div id="bpi3"></div>
-            </div>
-            <div id="bp2" class="piece">
-                <div id="bpi2"></div>
-            </div>
-            <div id="bp1" class="piece">
-                <div id="bpi1"></div>
-            </div>
-        </div>
-        <div id="bluemid">
-            <div></div>
-            <div class="bb"></div>
-            <div></div>
-            <div></div>
-            <div class="bb"></div>
-            <div></div>
-            <div></div>
-            <div class="bb"></div>
-            <div></div>
-            <div></div>
-            <div class="bb"></div>
-            <div class="str"></div>
-            <div class="bb bs"></div>
-            <div class="bb"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div id="yellow">
-            <div id="yp3" class="piece">
-                <div id="ypi3"></div>
-            </div>
-            <div id="yp1" class="piece">
-                <div id="ypi1"></div>
-            </div>
-            <div id="yp4" class="piece">
-                <div id="ypi4"></div>
-            </div>
-            <div id="yp2" class="piece">
-                <div id="ypi2"></div>
+            <div id="yellow">
+                <div class="blink">
+                    <div id="yp3" class="piece">
+                        <div id="ypi3"></div>
+                    </div>
+                    <div id="yp1" class="piece">
+                        <div id="ypi1"></div>
+                    </div>
+                    <div id="yp4" class="piece">
+                        <div id="ypi4"></div>
+                    </div>
+                    <div id="yp2" class="piece">
+                        <div id="ypi2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div id="theme">
-        <div id="dtp">
-            <div class="hdng">
-                <p class="l">L</p>
-                <p class="u">U</p>
-                <p class="d">D</p>
-                <p class="o">O</p>
-            </div>
-            <div id="stndngsm"></div>
-        </div>
         <div id="intro">
             <div id="players">
                 <p class="ph">Players</p>
@@ -191,25 +196,75 @@
             <button id="start">Start</button>
         </div>
         <div id="btm">
-            <div id="dice" class="pulse-animation">
-                <div id="b1"></div>
-                <div id="b2"></div>
-                <div id="b3"></div>
-                <div id="b4"></div>
-                <div id="b5"></div>
-                <div id="b6"></div>
+            <div class="dice-container">
+                <div id="dice" class="dice">
+                    <div class="side side-1">
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="side side-2">
+                        <div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="side side-3">
+                        <div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="side side-4">
+                        <div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="side side-5">
+                        <div>
+                            <div></div>
+                            <div></div>
+                            <div id="b3"></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="side side-6">
+                        <div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dicep pulse-animation">
+                    <p class="dicepd">👈🏻</p>
+                </div>
             </div>
             <button id="restart">Restart</button>
         </div>
-
-        <div id="confirm">
-            <h3>Restart Game?</h3>
-            <div id="cnfrmb">
-                <button id="home">Yes</button>
-                <button id="no">No</button>
-            </div>
-        </div>
     </div>
+    <div id="confirm">
+        <h4>Restart Game?</h4>
+        <div id="cnfrmb">
+            <button id="home">Yes</button>
+            <button id="no">No</button>
+        </div>
+    </div><span id="fullscreen">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+            fill="#fff">
+            <path
+                d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z">
+            </path>
+        </svg>
+    </span>
     <script src="app.js"></script>
 </body>
 

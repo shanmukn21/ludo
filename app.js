@@ -14,6 +14,7 @@ let chldc = 0;
 let chlda = [];
 
 const dice = document.getElementById("dice");
+const dicep = document.querySelector(".dicep");
 const b3 = document.getElementById("b3");
 const start = document.getElementById("start");
 const home = document.getElementById("home");
@@ -160,7 +161,7 @@ pcsr.addEventListener('click', () => {
 start.addEventListener('click', () => {
     Initialize();
     intro.style.display = 'none';
-    btm.style.display = 'flex';
+    btm.style.display = 'grid';
 });
 
 home.addEventListener('click', () => {
@@ -171,26 +172,19 @@ restart.addEventListener('click', () => {
     if (cnt === (nop - 1)) {
         location.reload();
     } else {
-        confirm.style.display = "flex";
+        confirm.style.transform = "scale(1)";
     }
 });
 
 no.addEventListener('click', () => {
-    confirm.style.display = "none";
+    confirm.style.transform = "scale(0)";
 });
 
 dice.addEventListener('click', () => {
     if (rd === 1) {
         rd = 0;
-        if (dice.classList.contains('pulse-animation')) {
-            dice.classList.remove('pulse-animation');
-        }
-        dice.style.animation = "dice-rotate 0.5s ease-in-out";
-        setTimeout(gnrtnum, 250);
-
-        dice.addEventListener('animationend', () => {
-            dice.style.animation = "";
-        }, { once: true });
+        dicep.style.display = 'none';
+        gnrtnum();
     }
 });
 
@@ -210,6 +204,7 @@ function onlymove() {
                     document.getElementById(`${pc[p]}`).click();
                 } else if (rn !== 6 && clickable()) {
                     chlda[clickit()].click();
+
                 } else if (debugplyr && ec === 1 && dca === 0) {
                     if ((chlda[0].c + rn) === 56) {
                         chlda[0].click();
@@ -332,7 +327,7 @@ function chngplayer() { // Change player
     p = (p + 1) % 4;
     rn = 0;
     rd = 1;
-    dice.classList.add("pulse-animation");
+    dicep.style.display = 'block';
     stopFlicker(); // Stop any ongoing flickering
     flickw(); // Start new flickering cycle
     chngz();
@@ -351,16 +346,16 @@ function chngplayer() { // Change player
 function flickw() {
     for (let i = 0; i < 4; i++) {
         if (p === i) {
-            document.querySelector(`#${pc[i]}`).style.borderColor = "white";
+            document.querySelector(`#${pc[i]}`).style.background = "white";
         } else {
-            document.querySelector(`#${pc[i]}`).style.borderColor = `${pc[i]}`;
+            document.querySelector(`#${pc[i]}`).style.background = `${pc[i]}`;
         }
     }
     flickTimeout = setTimeout(flickb, 150); // Schedule flickb
 }
 
 function flickb() {
-    document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
+    document.querySelector(`#${pc[p]}`).style.background = `${pc[p]}`;
     flickTimeout = setTimeout(flickw, 300); // Schedule flickw
 }
 
@@ -520,12 +515,12 @@ function findcord() {//finds coordinates of piece
 
 function movep() {//moves piece
     let dch = 0;
-    let xp = x * 15;
-    let yp = y * 15;
+    let xp = x * 100;
+    let yp = y * 100;
     chld.x += xp;
     chld.y += yp;
-    chld.style.transform = `translate(${chld.x}px, ${chld.y}px)`;
-    chld.innerText = '';
+    chld.style.transform = `translate(${chld.x}%, ${chld.y}%)`;
+    chld.children[0].innerText = ``;
     k++;
     if (k < 57 && k <= (chld.c + rn) && 57 > (chld.c + rn)) {
         setTimeout(findcord, 50);
@@ -538,53 +533,11 @@ function movep() {//moves piece
                 console.log(`${chld.className}: ${chld.c} to ${chld.c + rn}`);
             }
             chld.c += rn;
-            if (prnt.r > 1) {
-                if (prnt.r === 2) {
-                    for (let j = 1, jc = 1; j <= 2 && jc <= 4; jc++) {
-                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
-                        if (tchld && (tchld.c === 56)) {
-                            tchld.style.minWidth = '7px';
-                            tchld.style.minHeight = '7px';
-                            if (j === 1) {
-                                tchld.style.transform = `translate(${tchld.x + 1.5}px, ${tchld.y + 5.5}px)`;
-                            } else if (j === 2) {
-                                tchld.style.transform = `translate(${tchld.x + 1.5}px, ${tchld.y - 2.5}px)`;
-                            }
-                            j++;
-                        }
-                    }
-                } else if (prnt.r === 3) {
-                    for (let j = 1, jc = 1; j <= 3 && jc <= 4; jc++) {
-                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
-                        if (tchld && (tchld.c === 56)) {
-                            tchld.style.minWidth = '7px';
-                            tchld.style.minHeight = '7px';
-                            if (j === 1) {
-                                tchld.style.transform = `translate(${tchld.x - 2}px, ${tchld.y + 5.5}px)`;
-                            } else if (j === 2) {
-                                tchld.style.transform = `translate(${tchld.x - 2}px, ${tchld.y - 2.5}px)`;
-                            } else if (j === 3) {
-                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y + 1.5}px)`;
-                            }
-                            j++;
-                        }
-                    }
-                } else if (prnt.r === 4) {
-                    for (let j = 1, jc = 1; j <= 4 && jc <= 4; jc++) {
-                        let tchld = document.querySelector(`.${pc[p][0]}p${jc}`);
-                        if (tchld && (tchld.c === 56)) {
-                            tchld.style.minWidth = '7px';
-                            tchld.style.minHeight = '7px';
-                            if (j === 1) {
-                                tchld.style.transform = `translate(${tchld.x - 2.5}px, ${tchld.y + 5.5}px)`;
-                            } else if (j === 2) {
-                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y - 2.5}px)`;
-                            } else if (j === 3) {
-                                tchld.style.transform = `translate(${tchld.x - 2.5}px, ${tchld.y - 2.5}px)`;
-                            } else if (j === 4) {
-                                tchld.style.transform = `translate(${tchld.x + 5.5}px, ${tchld.y + 5.5}px)`;
-                            }
-                            j++;
+            if (chld.c === 56) {
+                if (prnt.r > 1) {
+                    if (prnt.r === 4) {
+                        if (rn === 6) {
+                            chngplayer();
                         }
                     }
                 }
@@ -595,7 +548,7 @@ function movep() {//moves piece
             } else if (chld.c < 51) {
                 take();
             }
-            if (chld.c < 56) {
+            if (chld.c <= 56) {
                 teamup();
             }
             if (chld.c === 56) {
@@ -612,23 +565,22 @@ function movep() {//moves piece
                 if (i === 5) {
                     wo[cnt] = pc[p];
                     cnt++;
+                    if(cnt===(nop-1)){
+                        dicep.style.display = 'none';
+                    }
                     let tstndngs = document.createElement('div');
                     tstndngs.style.color = `${pc[p]}`;
                     tstndngs.innerText = `${cnt}.${pc[p]}`;
-                    let tstndngsm = document.createElement('div');
-                    tstndngsm.style.color = `${pc[p]}`;
-                    tstndngsm.innerText = `${cnt}.${pc[p]}`;
                     document.getElementById('stndngsd').appendChild(tstndngs);
-                    document.getElementById('stndngsm').appendChild(tstndngsm);
                 }
                 if (cnt === (nop - 1)) {
                     debugdice = false;
-                    dice.classList.remove("pulse-animation");
+                    dicep.style.display = 'none';
                     dice.style.pointerEvents = 'none';
                     rd = 0;
                     rn = 0;
                     stopFlicker();
-                    document.querySelector(`#${pc[p]}`).style.borderColor = `${pc[p]}`;
+                    document.querySelector(`#${pc[p]}`).style.background = `${pc[p]}`;
                     return;
                 }
             }
@@ -640,7 +592,7 @@ function movep() {//moves piece
         if (dch === 0) {
             rn = 0;
             rd = 1;
-            dice.classList.add("pulse-animation");
+            dicep.style.display = 'block';
             if (debugdice) { dice.click(); }
         }
     }
@@ -665,14 +617,14 @@ function takec(j, indx) {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
-                tmpc.innerText = `${nc}`;
+                tmpc.children[0].innerText = `${nc}`;
             }
         }
     } else {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
-                tmpc.innerText = ``;
+                tmpc.children[0].innerText = ``;
             }
         }
     }
@@ -691,14 +643,14 @@ function checkz() {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
-                tmpc.innerText = `${nc}`;
+                tmpc.children[0].innerText = `${nc}`;
             }
         }
     } else {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
             if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
-                tmpc.innerText = ``;
+                tmpc.children[0].innerText = ``;
             }
         }
     }
@@ -709,14 +661,14 @@ function teamup() {
     let nc = 1;
     for (let n = 1; n <= 4; n++) {
         let tmpc = document.querySelector(`.${j}p${n}`);
-        if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56 && tmpc.className !== chld.className) {
+        if (mat[indx][`${j}p${n}`] === 1 && tmpc.c <= 56 && tmpc.className !== chld.className) {
             nc++;
         }
     } if (nc > 1) {
         for (let n = 1; n <= 4; n++) {
             let tmpc = document.querySelector(`.${j}p${n}`);
-            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c < 56) {
-                tmpc.innerText = `${nc}`;
+            if (mat[indx][`${j}p${n}`] === 1 && tmpc.c <= 56) {
+                tmpc.children[0].innerText = `${nc}`;
             }
         }
     }
@@ -757,22 +709,24 @@ function pieceout() {//creates piece or brings out piece
         if (prnt.data[i - 1] === 0) {
             prnt.data[i - 1] = 1;
             chld = document.createElement('div');
+            let newChild = document.createElement('div');
+            newChild.style.backgroundColor = `${pc[p]}`;
+            chld.appendChild(newChild);
             chld.className = `${c}` + 'p' + `${i}`;
             if (dbg) {
                 console.log(`${chld.className} came out`);
             }
-            chld.style.backgroundColor = `${pc[p]}`;
             chld.style.zIndex = `16`;
             document.getElementById(`${c}p${i}`).removeChild(document.getElementById(`${c}pi${i}`));
             rn = 0;
             rd = 1;
-            dice.classList.add("pulse-animation");
+            dicep.style.display = 'block';
             chld.c = 0;
             chld.x = 0;
             chld.y = 0;
             chld.addEventListener('click', () => {
                 chld = document.querySelector(`.${c}p${i}`);
-                if (pc[p] === chld.style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
+                if (pc[p] === chld.children[0].style.backgroundColor && (chld.c + rn) <= 56 && rn > 0) {
                     k = 0;
                     if (chld.c > -1) {
                         k = chld.c + 1;
@@ -793,40 +747,38 @@ function pieceout() {//creates piece or brings out piece
 }
 function gnrtnum() {//generates random num b/w 1 to 6
     rn = Math.floor(Math.random() * 6) + 1;
+    //change face of the dice or roll dice
+
+    let randomX = 720 + Math.floor(Math.random() * 180);
+    let randomY = 720 + Math.floor(Math.random() * 180);
+
+    dice.style.transition = "transform 0.75s ease-in";
+    dice.style.transform = `rotateX(${randomX}deg) rotateY(${randomY}deg)`;
+
+    setTimeout(rolldice, 751);
+
+}
+function rolldice() {
+    let xr = 0, yr = 0;
+
+    switch (rn) {
+        case 1: xr = 0; yr = 0; break;
+        case 2: xr = 0; yr = 90; break;
+        case 3: xr = 90; yr = 0; break;
+        case 4: xr = -90; yr = 0; break;
+        case 5: xr = 0; yr = -90; break;
+        case 6: xr = 180; yr = 0; break;
+    }
+
+    // Apply the final position
+    dice.style.transition = "transform 0.75s ease-out";
+    dice.style.transform = `rotateX(${xr}deg) rotateY(${yr}deg)`;
+    setTimeout(checklmts, 751);
+}
+function checklmts() {// check the limits of the piece with rn
     if (dbg) {
         console.log('dice rolled:', rn);
     }
-    //change face of the dice or roll dice
-    for (let i = 0; i < rn; i++) {
-        document.getElementById(`b${i + 1}`).style.display = "block";
-    } for (let i = rn; i < 6; i++) {
-        document.getElementById(`b${i + 1}`).style.display = "none";
-    }
-    if (rn !== 4) {
-        dice.style.rowGap = "0px";
-    }
-    if (rn === 5) {
-        dice.style.padding = "8px";
-        b3.style.marginLeft = "12px";
-        b3.style.marginRight = "12px";
-    } else {
-        b3.style.marginLeft = "0px";
-        b3.style.marginRight = "0px";
-        if (rn === 1) {
-            dice.style.padding = "20px";
-        } else if (rn === 2) {
-            dice.style.padding = "11px";
-        } else if (rn === 4) {
-            dice.style.padding = "11px";
-            dice.style.rowGap = "6px";
-        } else {
-            dice.style.padding = "7px";
-        }
-    }
-    checklmts();
-}
-
-function checklmts() {// check the limits of the piece with rn
     let cc = 0, c = pc[p][0];//cc: change color or player
     prnt = document.querySelector(`.${c}s`);
     if (chld) {
@@ -844,7 +796,7 @@ function checklmts() {// check the limits of the piece with rn
         } else if ((cm + stlin) === 4 && rn === 6) {
             rn = 0;
             rd = 1;
-            dice.classList.add("pulse-animation");
+            dicep.style.display = 'block';
             if (debugdice) {
                 dice.click();
             }
@@ -872,3 +824,25 @@ function checklmts() {// check the limits of the piece with rn
         chngplayer();
     }
 }
+
+const fullScreenButton = document.getElementById('fullscreen');
+const enterSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>`;
+const exitSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/></svg>`;
+
+fullScreenButton.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            alert(`Error attempting to enable fullscreen mode: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+});
+
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+        fullScreenButton.innerHTML = exitSVG;
+    } else {
+        fullScreenButton.innerHTML = enterSVG;
+    }
+});
