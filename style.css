@@ -4,18 +4,26 @@
     border: 0;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
-    -webkit-tap-highlight-color: transparent;
     outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html {
+    height: 100%;
 }
 
 body {
-    height: 100vh;
+    height: 100%;
     display: grid;
-    grid-template-rows: 25vh 50vh 25vh;
+    grid-template-rows: 1fr min(50vmax, 100vw, 100%) 1fr;
     grid-template-columns: 100vw;
     place-items: center;
-    background-image: url(bg.jpg);
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
     position: relative;
 }
 
@@ -25,6 +33,8 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    grid-row: 1 / 2;
+    grid-column: 1 / 3;
 }
 
 .hdng,
@@ -38,28 +48,29 @@ header {
 
 .l {
     color: blue;
-    pointer-events: all;
 }
 
 .u {
-    pointer-events: all;
     color: red;
 }
 
 .d {
-    pointer-events: all;
     color: green;
 }
 
 .o {
-    pointer-events: all;
     color: yellow;
 }
 
+footer {
+    grid-row: 3 / 4;
+}
+
 #container {
-    height: min(100%, 100vw);
-    width: min(100%, 50vh);
+    height: 100%;
+    aspect-ratio: 1;
     grid-row: 2 / 3;
+    position: relative;
 }
 
 #board {
@@ -68,68 +79,155 @@ header {
     display: grid;
     grid-template-columns: 40% 20% 40%;
     grid-template-rows: 40% 20% 40%;
+    opacity: 0.1;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 1;
+}
+
+.greenTurn {
+    grid-column: 3 / 4;
+}
+
+.yellowTurn {
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+}
+
+.blueTurn {
+    grid-row: 3 / 4;
+}
+
+#theme {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#btm {
+    place-items: center;
+    display: none;
+    position: absolute;
+    z-index: 0;
+}
+
+#stndngsd {
+    width: 100%;
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+#stndngsd div {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    text-shadow: 0 0 0.2vmax #000;
+    color: #fff;
+    font-size: min(8vh, 4vw);
+    display: grid;
+    place-items: center;
 }
 
 @media (orientation: landscape) {
     body {
-        grid-template-rows: auto min(20vw, 40vh) min(30vw, 60vh) auto;
-        grid-template-columns: 50vw 50vw;
-    }
-
-    #container {
-        height: min(100vh, 50vw);
-        width: min(100%, 100vh);
-        grid-row: 1 / 5;
-        grid-column: 1 / 2;
-        padding: 0%;
-    }
-
-    header {
-        grid-row: 2 / 3;
-        grid-column: 2 / 3;
-    }
-
-    #theme {
-        grid-row: 3 / 4;
-        grid-column: 2 / 3;
+        background-image: url(bg.webp);
     }
 
     #btm {
-        display: none;
-        grid-template-rows: min(10vw,20vh) min(20vw,40vh);
-        grid-template-columns: 20vw;
-        place-items: center;
-    }
-
-    #intro {
-        grid-template-columns: 20vw 20vw;
-        grid-template-rows: min(10vw,20vh) min(20vw,40vh);
+        grid-template-rows: 26% 48% 26%;
+        grid-template-columns: 17% 66% 17%;
+        width: 150%;
+        height: 100%;
+        left: -25%;
     }
 
     #stndngsd {
-        width: 100%;
-        font-size: 7vmin;
-        gap: 4vmin;
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+    }
+
+    #stndngsd div {
+        width: 51%;
+    }
+
+    #intro div button {
+        min-width: min(7vh, 3.5vw);
+        min-height: min(7vh, 3.5vw);
+        max-width: min(7vh, 3.5vw);
+        max-height: min(7vh, 3.5vw);
+    }
+
+    p,
+    button {
+        font-size: min(6vh, 3vw);
+    }
+
+    h3 {
+        font-size: min(12vh, 6vw);
+    }
+
+    h4 {
+        font-size: min(8vh, 4vw);
+    }
+
+    #greenmid>div>div>div,
+    #bluemid>div>div>div,
+    #redmid>div>div>div,
+    #yellowmid>div>div>div {
+        font-size: min(3vh,1.5vw);
     }
 }
 
 @media (orientation: portrait) {
-    #intro {
-        grid-template-rows: 15vh 10vh;
-        grid-template-columns: min(50vw, 25vh) min(50vw, 25vh);
+
+    body {
+        background-image: url(bgp.webp);
     }
 
     #btm {
-        display: none;
-        grid-template-columns: min(50vw, 25vh) min(50vw, 25vh);
-        grid-template-rows: 10vh;
-        place-items: center;
+        grid-template-columns: 26% 48% 26%;
+        grid-template-rows: 17% 66% 17%;
+        height: 150%;
+        width: 100%;
+        top: -25%;
     }
 
     #stndngsd {
-        width: 100%;
-        font-size: 7vmin;
-        gap: 7vmin;
+        grid-row: 1 / 2;
+        grid-column: 2 / 3;
+    }
+
+    #stndngsd div {
+        height: 40%;
+    }
+
+    #intro div button {
+        min-width: min(7vw, 3.5vh);
+        min-height: min(7vw, 3.5vh);
+        max-width: min(7vw, 3.5vh);
+        max-height: min(7vw, 3.5vh);
+    }
+
+    p,
+    button {
+        font-size: min(6vw, 3vh);
+    }
+
+    h3 {
+        font-size: min(12vw, 6vh);
+    }
+
+    h4 {
+        font-size: min(8vw, 4vh);
+    }
+    
+    #greenmid>div>div>div,
+    #bluemid>div>div>div,
+    #redmid>div>div>div,
+    #yellowmid>div>div>div {
+        font-size: min(1.5vh,3vw);
     }
 }
 
@@ -179,7 +277,6 @@ header {
     z-index: 1;
     padding: 10%;
     background-color: transparent;
-    transition: all 0.1s ease-out;
 }
 
 #greenmid>div>div>div,
@@ -192,8 +289,8 @@ header {
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-size: 1.5vmax;
-    color: white;
+    text-shadow: 0 0 0.2vmax #000;
+    color: #fff;
     cursor: pointer;
     z-index: inherit;
 }
@@ -218,6 +315,7 @@ header {
 #blue {
     padding: 16.66%;
     cursor: pointer;
+    z-index: 30;
     border: 0.15vmin solid rgba(0, 0, 0, 0.3);
 }
 
@@ -328,11 +426,10 @@ header {
 }
 
 .dice-container {
-    width: 100%;
     height: 100%;
     display: grid;
     place-items: center;
-    grid-template-columns: 25% 50% 25%;
+    scale: 0.5;
 }
 
 .dice {
@@ -341,11 +438,24 @@ header {
     transform-style: preserve-3d;
     transform: rotateX(180deg) rotateY(0deg);
     transition: transform 0.5s linear;
-    grid-column: 2/3;
 }
 
-.dicepd{
-    font-size: min(5vmax,10vh);
+.pulse {
+    animation: pulsescale 0.5s infinite;
+}
+
+@keyframes pulsescale {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .side {
@@ -376,11 +486,11 @@ header {
 }
 
 .side-1 {
-    transform: rotateX(000deg) translateZ(min(5vmax,10vh));
+    transform: rotateX(000deg) translateZ(min(5vmax, 10vh));
 }
 
 .side-2 {
-    transform: rotateY(270deg) translateZ(min(5vmax,10vh));
+    transform: rotateY(270deg) translateZ(min(5vmax, 10vh));
 }
 
 .side-2 div {
@@ -388,7 +498,7 @@ header {
 }
 
 .side-3 {
-    transform: rotateX(270deg) translateZ(min(5vmax,10vh));
+    transform: rotateX(270deg) translateZ(min(5vmax, 10vh));
 }
 
 .side-3 div {
@@ -400,11 +510,11 @@ header {
 }
 
 .side-4 {
-    transform: rotateX(090deg) translateZ(min(5vmax,10vh));
+    transform: rotateX(090deg) translateZ(min(5vmax, 10vh));
 }
 
 .side-5 {
-    transform: rotateY(090deg) translateZ(min(5vmax,10vh));
+    transform: rotateY(090deg) translateZ(min(5vmax, 10vh));
     column-gap: 30%;
     padding: 10%;
 }
@@ -418,7 +528,7 @@ header {
 }
 
 .side-6 {
-    transform: rotateX(180deg) translateZ(min(5vmax,10vh));
+    transform: rotateX(180deg) translateZ(min(5vmax, 10vh));
 }
 
 .side-6 div {
@@ -436,12 +546,12 @@ header {
     border-radius: 50%;
 }
 
-.pulse-animation {
-    animation: pulse 0.5s infinite;
-}
-
 #intro {
+    width: 100%;
+    height: 100%;
     display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 40% 20% 40%;
     place-items: center;
     color: white;
 }
@@ -467,17 +577,13 @@ header {
     justify-content: center;
 }
 
+#pins button{
+    border-radius: 50%;
+}
 
 #intro div button {
-    background-color: transparent;
-    color: yellow;
-    border: 0.5vmin solid yellow;
     padding: 0%;
     margin: 1.5vmin;
-    min-width: 3.5vmax;
-    min-height: 3.5vmax;
-    max-width: 3.5vmax;
-    max-height: 3.5vmax;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -495,23 +601,21 @@ header {
 }
 
 #restart {
+    top: 3.5vmin;
+    left: 3.5vmin;
+    position: absolute;
     display: block;
-    background-color: red;
     color: white;
+    background: transparent;
+    outline: none;
+    padding: 0;
+    width: 5vmin;
+    height: 5vmin;
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.5);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+#restart svg {
+    width: 100%;
+    height: 100%;
 }
 
 .rs,
@@ -538,7 +642,7 @@ header {
 }
 
 .str {
-    background-image: url(star.png);
+    background-image: url(star.webp);
     background-repeat: no-repeat;
     background-size: contain;
 
@@ -555,7 +659,7 @@ header {
     padding: 1vw;
     box-shadow: 0vw 0vw 0.5vw 0.5vw rgb(0, 0, 0, 0.35);
     transform: scale(0);
-    transition: all 0.3s ease;
+    transition: scale 0.3s ease;
 }
 
 #cnfrmb {
@@ -582,19 +686,6 @@ button:active {
     transform: scale(0.9);
 }
 
-p,
-button {
-    font-size: max(3vw, 3vh);
-}
-
-h3 {
-    font-size: max(6vw, 6vh);
-}
-
-h4 {
-    font-size: max(4vw, 4vh);
-}
-
 #fullscreen {
     position: absolute;
     right: 3.5vmin;
@@ -609,4 +700,62 @@ h4 {
 #fullscreen svg {
     width: 100%;
     height: 100%;
+}
+
+.pick {
+    width: 50%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.pick div {
+    border-radius: 50%;
+}
+
+.active div {
+    width: 60%;
+    height: 60%;
+}
+
+.passive div {
+    width: 100%;
+    height: 100%;
+}
+
+.red div {
+    background: red;
+}
+
+.green div {
+    background: green;
+}
+
+.blue div {
+    background: blue;
+}
+
+.yellow div {
+    background: yellow;
+}
+
+.red {
+    border: 0.7vmin solid red;
+}
+
+.blue {
+    border: 0.7vmin solid blue;
+}
+
+.green {
+    border: 0.7vmin solid green;
+}
+
+.yellow {
+    border: 0.7vmin solid yellow;
+}
+
+#restart:focus {
+    transform: rotate(360deg);
+    transition: transform 0.6s ease-in-out;
 }
