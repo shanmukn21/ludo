@@ -604,7 +604,7 @@ footer {
     top: 3.5vmin;
     left: 3.5vmin;
     position: absolute;
-    display: block;
+    display: none;
     color: white;
     background: transparent;
     outline: none;

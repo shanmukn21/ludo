@@ -175,6 +175,7 @@ start.addEventListener('click', () => {
     Initialize();
     intro.style.display = 'none';
     btm.style.display = 'grid';
+    restart.style.display='block';
     board.style.opacity = '1';
     board.style.pointerEvents = 'all'
 });
